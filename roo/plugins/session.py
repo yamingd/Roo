@@ -41,6 +41,7 @@ class SessionPlugin(BasePlugin):
     def on_before(self, controller):
         """
         init user and check user's permission.
+        auth_service MUST have a method named 'auth'
         """
         session_id = controller.get_cookie(self.session_config.cookie_id)
         cookie_id = str(self.session_config.auth_cookie)
@@ -48,7 +49,7 @@ class SessionPlugin(BasePlugin):
         user = None
         if userid:
             auth_service = self.session_config.auth_service
-            auth_service = getattr(self.application.models(), auth_service)
+            auth_service = getattr(self.application.models, auth_service)
             user = auth_service.auth(userid)
             if user:
                 if not session_id:

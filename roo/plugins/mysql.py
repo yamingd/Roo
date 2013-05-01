@@ -42,8 +42,8 @@ class MySQLPlugin(BasePlugin):
         # locate db-connection if sharded
         user = threadlocal.get_user()
         if user:
-            shardid, _ = self.farm.find(long(user.id))
-            self.farm.setdb(shardid)
+            shard = self.farm.find(long(user.id))
+            self.farm.setdb(shard[0])
         else:
             shardid = self.farm.random()
             self.farm.setdb(shardid)

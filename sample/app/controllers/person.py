@@ -26,8 +26,14 @@ class Person(BaseController):
 
     def new(self):
         name = self.get_argument('name')
-        id = self.models.Person.new(name)
-        self.write("save done! id= %s, name=%s" % (id, name))
+        person = self.models.Person.new(name)
+        self.remember_user(person, True)
+        self.write("save done! id= %s, name=%s" % (person.id, person.name))
+
+    def profile(self):
+        person = self.current_user
+        person.stat().incrby('total_view', 1)
+        self.write(person.as_json())
 
     def view(self):
         name = self.get_argument('name')

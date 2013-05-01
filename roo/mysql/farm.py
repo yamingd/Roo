@@ -145,7 +145,7 @@ class MySQLFarm(object):
         """
         if self.db0:
             return (0, full_id, self.db0)
-        shard_id, object_type, local_id = self.id_service.parse(full_id)
+        shard_id, local_id = self.id_service.parse(full_id)
         host = self.servers.get(self.dbname(shard_id))
         db1 = self.cons[host]
         return (shard_id, local_id, db1)

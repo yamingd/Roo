@@ -19,7 +19,8 @@ class Person(BaseModel):
         id = clz.create(sql, name, datetime.now())
         sql = "insert into t_person_stat(id)values(%s)"
         clz.dbsess().execute(sql, id)
-        return id
+        ret = Person({'id': id, 'name': name})
+        return ret
 
     def update(self, *args, **kwargs):
         sql = "update t_person set real_name = %s where id = %s"
@@ -37,6 +38,12 @@ class Person(BaseModel):
     @prstat('PersonStat')
     def stat(self):
         pass
+
+    @classmethod
+    def auth(clz, id):
+        shard = clz.dbm().find(long(id))
+        clz.dbm().setdb(shard[0])
+        return clz.find(id)
 
 
 @EntityDef('t_person_stat', 11)

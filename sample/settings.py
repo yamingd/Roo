@@ -28,7 +28,8 @@ session = {
     "cookie_secret": "61oETzKXQAGaYdkL5gEmGeJJFuYh7EQnp2XdTP1o/Vo=",
     "expires_days": 30,
     "cookie_id": "_sess",
-    "auth_cookie": "_auth"
+    "auth_cookie": "_auth",
+    "auth_service": "Person"
 }
 session = ODict(session)
 
