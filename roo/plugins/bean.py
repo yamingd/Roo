@@ -62,7 +62,7 @@ class BeanstalkJobEngine(JobEngine):
         except:
             pass
 
-    def publish(self, *messages):
+    def send(self, *messages):
         self.connect()
         for message in messages:
             try:

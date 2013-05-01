@@ -22,7 +22,7 @@ class Person(BaseController):
         job['index1'] = self.cache.get('person.index')
         job['index2'] = self.redis.get('person.index')
         self.write("hello world. %s" % job.json())
-        self.mq.publish(job)
+        self.mq.send(job)
 
     def new(self):
         name = self.get_argument('name')

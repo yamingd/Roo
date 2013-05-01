@@ -73,7 +73,7 @@ class AMQPJobEngine(JobEngine):
         if self.publisher is not None:
             self.publisher.stop()
 
-    def publish(self, *messages):
+    def send(self, *messages):
         for item in messages:
             self.publisher.publish(item.queue, item.json())
 

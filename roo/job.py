@@ -30,7 +30,7 @@ class JobEngine(object):
     def close(self):
         pass
 
-    def publish(self, *messages):
+    def send(self, *messages):
         pass
 
     def on_message(self, raw_data):

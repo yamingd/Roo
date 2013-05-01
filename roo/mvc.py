@@ -2,7 +2,8 @@
 import re
 import os
 from datetime import datetime
-
+import signal
+import time
 # tornado
 import tornado.httpserver
 import tornado.ioloop
@@ -27,6 +28,8 @@ from roo.plugin import manager as pm
 from roo.model import EntityModel
 from roo.lib.dictfy import ODict
 from roo.controller import Controller
+
+SHUTDOWN_WAIT = 3
 
 
 class RooApplication(tornado.web.Application):
@@ -58,7 +61,8 @@ class RooApplication(tornado.web.Application):
         self.initenvs()
 
         settings["ui_modules"] = self.ui_modules_map
-        tornado.web.Application.__init__(self, handlers=self.handlers, **settings)
+        tornado.web.Application.__init__(
+            self, handlers=self.handlers, **settings)
         # keep settings as ODict
         # logger.info("settings: %s" % self.settings)
         self.settings = settings
@@ -170,19 +174,43 @@ class RestApplication(RooApplication):
     Support PUT、POST、GET、DELETE
     """
     def start(self):
-        http_server = tornado.httpserver.HTTPServer(self)
+        self.http_server = tornado.httpserver.HTTPServer(self, xheaders=True)
         print datetime.now(), "Starting tornado on port", self.options.port
         if self.options.prefork:
             print "\tpre-forking"
-            http_server.bind(self.options.port)
-            http_server.start()
+            self.http_server.bind(self.options.port)
+            self.http_server.start()
         else:
-            http_server.listen(self.options.port)
+            self.http_server.listen(self.options.port)
         logger.info('Starting at %s' % self.root)
+        signal.signal(signal.SIGTERM, self.sig_handler)
+        signal.signal(signal.SIGINT, self.sig_handler)
         try:
             tornado.ioloop.IOLoop.instance().start()
         except KeyboardInterrupt:
             pass
+
+    def sig_handler(self, sig, frame):
+        logger.warning('Caught signal: %s', sig)
+        tornado.ioloop.IOLoop.instance().add_callback(self.shutdown)
+
+    def shutdown(self):
+        logger.info('Stopping http server')
+        self.http_server.stop()
+
+        logger.info('Will shutdown in %s seconds ...', SHUTDOWN_WAIT)
+        io_loop = tornado.ioloop.IOLoop.instance()
+
+        deadline = time.time() + SHUTDOWN_WAIT
+
+        def stop_loop():
+            now = time.time()
+            if now < deadline and (io_loop._callbacks or io_loop._timeouts):
+                io_loop.add_timeout(now + 1, stop_loop)
+            else:
+                io_loop.stop()
+            logger.info('Shutdown')
+        stop_loop()
 
 
 class JobsApplication(RooApplication):
@@ -208,7 +236,7 @@ class JobsApplication(RooApplication):
         name = self.options.job
         engine = self.settings.jobengine(self, name)
         engine.start()
-    
+
     def finish(self, chunk=None):
         self._finished = True
         self.on_finish()
@@ -226,7 +254,7 @@ class JobsApplication(RooApplication):
         args = []
         kwargs = {}
         handlers = self._get_host_handlers(request)
-        #print handlers
+        # print handlers
         for spec in handlers:
             match = spec.regex.match(path)
             if match:
