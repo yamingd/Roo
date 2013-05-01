@@ -19,6 +19,7 @@ class AMQPPlugin(BasePlugin):
     amqp.passwd = 'secret'
     amqp.vhost = '/'
     amqp.exchange = 'rabbit'
+    amqp.ha = True
     """
     name = 'amqp'
 
@@ -26,21 +27,18 @@ class AMQPPlugin(BasePlugin):
         BasePlugin.__init__(self, application)
         self.application = application
         conf = application.settings.amqp
-        if 'vhost' not in conf:
-            conf.vhost = '/'
-        if 'exchange' not in conf:
-            conf.exchange = 'rabbit'
-        if 'port' not in conf:
-            conf.port = 5672
-        if 'host' not in conf:
-            conf.host = '127.0.0.1'
+        conf.setdefault('vhost', '/')
+        conf.setdefault('exchange', 'rabbit')
+        conf.setdefault('port', 5672)
+        conf.setdefault('host', '127.0.0.1')
+        conf.setdefault('ha', True)
         self.conf = conf
-        #used later
+        # used later
         self.engine = AMQPJobEngine(self.application)
-        #for JobApplication uses
+        # for JobApplication uses
         application.settings.jobengine = AMQPJobEngine
         setattr(application, 'mq', self.engine)
-        
+
     def on_before(self, controller):
         setattr(controller, 'mq', self.engine)
         self.engine.connect()
@@ -66,7 +64,8 @@ class AMQPJobEngine(JobEngine):
             user = self.conf.user
             passwd = self.conf.passwd
             exchange = self.conf.exchange
-            self.publisher = DefaultAMQPPublisher(app_id, host=host, port=port, vhost=vhost, user=user, password=passwd, exchange=exchange)
+            self.publisher = DefaultAMQPPublisher(
+                app_id, host=host, port=port, vhost=vhost, user=user, password=passwd, exchange=exchange)
             self.publisher.connect()
 
     def close(self):
@@ -75,7 +74,11 @@ class AMQPJobEngine(JobEngine):
 
     def send(self, *messages):
         for item in messages:
-            self.publisher.publish(item.queue, item.json())
+            if self.conf.ha:
+                queue = 'ha.' + item.queue
+            else:
+                queue = item.queue
+            self.publisher.publish(queue, item.json())
 
     def start(self):
         if self.consumer is None:
@@ -85,8 +88,13 @@ class AMQPJobEngine(JobEngine):
             user = self.conf.user
             passwd = self.conf.passwd
             exchange = self.conf.exchange
-            self.consumer = AsyncAMQPConsumer(host=host, port=port, vhost=vhost, user=user, 
-                password=passwd, exchange_name=exchange, queue_name=self.name, 
+            if self.conf.ha:
+                queue = 'ha.' + self.name
+            else:
+                queue = self.name
+            self.consumer = AsyncAMQPConsumer(
+                host=host, port=port, vhost=vhost, user=user,
+                password=passwd, exchange_name=exchange, queue_name=queue,
                 on_message_callback=self.on_message)
             try:
                 self.consumer.run()

@@ -74,4 +74,16 @@ beanstalk = {
 }
 beanstalk = ODict(beanstalk)
 
-plugins = ["mail", "cache", "redis", "mysql", "beanstalk"]
+amqp = {
+    "host": "192.168.0.104",
+    "port": 56720,
+    "pools": 5,
+    "user": "admin",
+    "passwd": "yamingd51",
+    "vhost": "/",
+    "exchange": "rabbit",
+    "ha": True
+}
+amqp = ODict(amqp)
+
+plugins = ["mail", "cache", "redis", "mysql", "amqp"]
