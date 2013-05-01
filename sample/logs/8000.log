@@ -1,0 +1,708 @@
+[2013-04-13 13:02:54 INFO roo.mvc:78] loading http request handlers
+[2013-04-13 13:02:54 INFO roo.mvc:105] loading plugins
+[2013-04-13 13:02:54 INFO roo.mvc:119] loading plugins, [<Plugin session>, <Plugin error>]
+[2013-04-13 13:02:54 INFO roo.mvc:125] loading ui modeuls
+[2013-04-13 13:02:54 INFO roo.mvc:56] settings: {'login_url': '/account/index', 'template_path': 'D:\\Projects\\Tink\\Roo\\sample\\app\\views', 'title': u'_site_title', '__builtins__': {'bytearray': <type 'bytearray'>, 'IndexError': <type 'exceptions.IndexError'>, 'all': <built-in function all>, 'help': Type help() for interactive help, or help(object) for help about object., 'vars': <built-in function vars>, 'SyntaxError': <type 'exceptions.SyntaxError'>, 'unicode': <type 'unicode'>, 'UnicodeDecodeError': <type 'exceptions.UnicodeDecodeError'>, 'memoryview': <type 'memoryview'>, 'isinstance': <built-in function isinstance>, 'copyright': Copyright (c) 2001-2012 Python Software Foundation.
+    All Rights Reserved.
+    
+    Copyright (c) 2000 BeOpen.com.
+    All Rights Reserved.
+    
+    Copyright (c) 1995-2001 Corporation for National Research Initiatives.
+    All Rights Reserved.
+    
+    Copyright (c) 1991-1995 Stichting Mathematisch Centrum, Amsterdam.
+    All Rights Reserved., 'NameError': <type 'exceptions.NameError'>, 'BytesWarning': <type 'exceptions.BytesWarning'>, 'dict': <type 'dict'>, 'input': <built-in function input>, 'oct': <built-in function oct>, 'bin': <built-in function bin>, 'SystemExit': <type 'exceptions.SystemExit'>, 'StandardError': <type 'exceptions.StandardError'>, 'format': <built-in function format>, 'repr': <built-in function repr>, 'sorted': <built-in function sorted>, 'False': False, 'RuntimeWarning': <type 'exceptions.RuntimeWarning'>, 'list': <type 'list'>, 'iter': <built-in function iter>, 'reload': <built-in function reload>, 'Warning': <type 'exceptions.Warning'>, '__package__': None, 'round': <built-in function round>, 'dir': <built-in function dir>, 'cmp': <built-in function cmp>, 'set': <type 'set'>, 'bytes': <type 'str'>, 'reduce': <built-in function reduce>, 'intern': <built-in function intern>, 'issubclass': <built-in function issubclass>, 'Ellipsis': Ellipsis, 'EOFError': <type 'exceptions.EOFError'>, 'locals': <built-in function locals>, 'BufferError': <type 'exceptions.BufferError'>, 'slice': <type 'slice'>, 'FloatingPointError': <type 'exceptions.FloatingPointError'>, 'sum': <built-in function sum>, 'getattr': <built-in function getattr>, 'abs': <built-in function abs>, 'exit': Use exit() or Ctrl-Z plus Return to exit, 'print': <built-in function print>, 'True': True, 'FutureWarning': <type 'exceptions.FutureWarning'>, 'ImportWarning': <type 'exceptions.ImportWarning'>, 'None': None, 'hash': <built-in function hash>, 'ReferenceError': <type 'exceptions.ReferenceError'>, 'len': <built-in function len>, 'credits':     Thanks to CWI, CNRI, BeOpen.com, Zope Corporation and a cast of thousands
+        for supporting Python development.  See www.python.org for more information., 'frozenset': <type 'frozenset'>, '__name__': '__builtin__', 'ord': <built-in function ord>, 'super': <type 'super'>, 'TypeError': <type 'exceptions.TypeError'>, 'license': Type license() to see the full license text, 'KeyboardInterrupt': <type 'exceptions.KeyboardInterrupt'>, 'UserWarning': <type 'exceptions.UserWarning'>, 'filter': <built-in function filter>, 'range': <built-in function range>, 'staticmethod': <type 'staticmethod'>, 'SystemError': <type 'exceptions.SystemError'>, 'BaseException': <type 'exceptions.BaseException'>, 'pow': <built-in function pow>, 'RuntimeError': <type 'exceptions.RuntimeError'>, 'float': <type 'float'>, 'MemoryError': <type 'exceptions.MemoryError'>, 'StopIteration': <type 'exceptions.StopIteration'>, 'globals': <built-in function globals>, 'divmod': <built-in function divmod>, 'enumerate': <type 'enumerate'>, 'apply': <built-in function apply>, 'LookupError': <type 'exceptions.LookupError'>, 'open': <built-in function open>, 'quit': Use quit() or Ctrl-Z plus Return to exit, 'basestring': <type 'basestring'>, 'UnicodeError': <type 'exceptions.UnicodeError'>, 'zip': <built-in function zip>, 'hex': <built-in function hex>, 'long': <type 'long'>, 'next': <built-in function next>, 'ImportError': <type 'exceptions.ImportError'>, 'chr': <built-in function chr>, 'xrange': <type 'xrange'>, 'type': <type 'type'>, '__doc__': "Built-in functions, exceptions, and other objects.\n\nNoteworthy: None is the `nil' object; Ellipsis represents `...' in slices.", 'Exception': <type 'exceptions.Exception'>, 'tuple': <type 'tuple'>, 'UnicodeTranslateError': <type 'exceptions.UnicodeTranslateError'>, 'reversed': <type 'reversed'>, 'UnicodeEncodeError': <type 'exceptions.UnicodeEncodeError'>, 'IOError': <type 'exceptions.IOError'>, 'hasattr': <built-in function hasattr>, 'delattr': <built-in function delattr>, 'setattr': <built-in function setattr>, 'raw_input': <built-in function raw_input>, 'SyntaxWarning': <type 'exceptions.SyntaxWarning'>, 'compile': <built-in function compile>, 'ArithmeticError': <type 'exceptions.ArithmeticError'>, 'str': <type 'str'>, 'property': <type 'property'>, 'GeneratorExit': <type 'exceptions.GeneratorExit'>, 'int': <type 'int'>, '__import__': <built-in function __import__>, 'KeyError': <type 'exceptions.KeyError'>, 'coerce': <built-in function coerce>, 'PendingDeprecationWarning': <type 'exceptions.PendingDeprecationWarning'>, 'file': <type 'file'>, 'EnvironmentError': <type 'exceptions.EnvironmentError'>, 'unichr': <built-in function unichr>, 'id': <built-in function id>, 'OSError': <type 'exceptions.OSError'>, 'DeprecationWarning': <type 'exceptions.DeprecationWarning'>, 'min': <built-in function min>, 'UnicodeWarning': <type 'exceptions.UnicodeWarning'>, 'execfile': <built-in function execfile>, 'any': <built-in function any>, 'complex': <type 'complex'>, 'bool': <type 'bool'>, 'ValueError': <type 'exceptions.ValueError'>, 'NotImplemented': NotImplemented, 'map': <built-in function map>, 'buffer': <type 'buffer'>, 'max': <built-in function max>, 'object': <type 'object'>, 'TabError': <type 'exceptions.TabError'>, 'callable': <built-in function callable>, 'ZeroDivisionError': <type 'exceptions.ZeroDivisionError'>, 'eval': <built-in function eval>, '__debug__': True, 'IndentationError': <type 'exceptions.IndentationError'>, 'AssertionError': <type 'exceptions.AssertionError'>, 'classmethod': <type 'classmethod'>, 'UnboundLocalError': <type 'exceptions.UnboundLocalError'>, 'NotImplementedError': <type 'exceptions.NotImplementedError'>, 'AttributeError': <type 'exceptions.AttributeError'>, 'OverflowError': <type 'exceptions.OverflowError'>, 'WindowsError': <type 'exceptions.WindowsError'>}, 'root': 'D:\\Projects\\Tink\\Roo\\sample', '__file__': 'D:\\Projects\\Tink\\Roo\\sample\\settings.pyc', 'site': {'domain': u'http://sample.dev.com', 'login_url': '/account/index', 'feedback': u'_site_feedback_mail', 'title': u'_site_title', 'cdn': u'http://sample.dev.com', 'admin_mail': u'_site_admin_mail', 'keywords': u'_site_keyworks_', 'xsrf_cookies': True, 'cookie_secret': '61oETzKXQAGaYdkL5gEmGeJJFuYh7EQnp2XdTP1o/Vo=', 'debug': True, 'logging': 'debug', 'gzip': False, 'webmaster': u'_site_webmaster_mail', 'description': u'_site_description_'}, 'ODict': <class 'roo.lib.dictfy.ODict'>, '__package__': None, 'session': {'cookie_secret': '61oETzKXQAGaYdkL5gEmGeJJFuYh7EQnp2XdTP1o/Vo=', 'cookie_id': '_sess', 'auth_cookie': '_auth', 'key': u'sample', 'expires_days': 30}, 'cookie_secret': '61oETzKXQAGaYdkL5gEmGeJJFuYh7EQnp2XdTP1o/Vo=', 'plugins': [], 'debug': True, '__name__': 'settings', 'ui_modules': {}, 'xsrf_cookies': True, '__doc__': None, 'static_path': 'D:\\Projects\\Tink\\Roo\\sample\\public'}
+[2013-04-13 13:02:54 INFO roo.mvc:164] Starting at D:\Projects\Tink\Roo\sample
+[2013-04-13 13:03:16 ERROR roo.plugin:176] IOError(2, 'No such file or directory') on /helloworld/index TRACEBACK:
+    Traceback (most recent call last):
+      File "G:\Python27\lib\site-packages\roo-0.1-py2.7.egg\roo\controller.py", line 160, in _execute
+        self._execute_method(*self.path_args, **self.path_kwargs)
+      File "G:\Python27\lib\site-packages\roo-0.1-py2.7.egg\roo\controller.py", line 186, in _execute_method
+        func(*args, **kwargs)
+      File "D:\Projects\Tink\Roo\sample\app\controllers\helloworld.py", line 14, in index
+        self.xrender()
+      File "G:\Python27\lib\site-packages\roo-0.1-py2.7.egg\roo\controller.py", line 72, in xrender
+        return tornado.web.RequestHandler.render(self, template_name, **kwargs)
+      File "G:\Python27\lib\site-packages\tornado\web.py", line 500, in render
+        html = self.render_string(template_name, **kwargs)
+      File "G:\Python27\lib\site-packages\tornado\web.py", line 604, in render_string
+        t = loader.load(template_name)
+      File "G:\Python27\lib\site-packages\tornado\template.py", line 331, in load
+        self.templates[name] = self._create_template(name)
+      File "G:\Python27\lib\site-packages\tornado\template.py", line 363, in _create_template
+        template = Template(f.read(), name=name, loader=self)
+      File "G:\Python27\lib\site-packages\tornado\template.py", line 221, in __init__
+        self.code = self._generate_python(loader, compress_whitespace)
+      File "G:\Python27\lib\site-packages\tornado\template.py", line 272, in _generate_python
+        ancestors = self._get_ancestors(loader)
+      File "G:\Python27\lib\site-packages\tornado\template.py", line 291, in _get_ancestors
+        template = loader.load(chunk.name, self.name)
+      File "G:\Python27\lib\site-packages\tornado\template.py", line 331, in load
+        self.templates[name] = self._create_template(name)
+      File "G:\Python27\lib\site-packages\tornado\template.py", line 362, in _create_template
+        f = open(path, "rb")
+    IOError: [Errno 2] No such file or directory: u'D:\\Projects\\Tink\\Roo\\sample\\app\\views\\helloworld\\base.html'
+    
+    REQUEST ARGUMENTS:
+    {}
+    
+    COOKIES:
+      _sess: None
+    
+    REQUEST:
+      full_url: 'http://localhost:8000/helloworld/index'
+      protocol: 'http'
+      query: ''
+      remote_ip: '::1'
+      request_time: 0.006999969482421875
+      uri: '/helloworld/index'
+      version: 'HTTP/1.1'
+    
+    HEADERS:
+    {'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+     'Accept-Encoding': 'gzip, deflate',
+     'Accept-Language': 'en-US,en;q=0.5',
+     'Cache-Control': 'max-age=0',
+     'Connection': 'keep-alive',
+     'Cookie': '_sess=96c35606c8b14e2387bf76f073d6b7f2',
+     'Host': 'localhost:8000',
+     'User-Agent': 'Mozilla/5.0 (Windows NT 6.2; WOW64; rv:20.0) Gecko/20100101 Firefox/20.0'}
+    
+[2013-04-13 13:03:16 ERROR root:1085] Uncaught exception GET /helloworld/index (::1)
+    HTTPRequest(protocol='http', host='localhost:8000', method='GET', uri='/helloworld/index', version='HTTP/1.1', remote_ip='::1', body='', headers={'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Host': 'localhost:8000', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (Windows NT 6.2; WOW64; rv:20.0) Gecko/20100101 Firefox/20.0', 'Connection': 'keep-alive', 'Cookie': '_sess=96c35606c8b14e2387bf76f073d6b7f2', 'Cache-Control': 'max-age=0'})
+    Traceback (most recent call last):
+      File "G:\Python27\lib\site-packages\roo-0.1-py2.7.egg\roo\controller.py", line 160, in _execute
+        self._execute_method(*self.path_args, **self.path_kwargs)
+      File "G:\Python27\lib\site-packages\roo-0.1-py2.7.egg\roo\controller.py", line 186, in _execute_method
+        func(*args, **kwargs)
+      File "D:\Projects\Tink\Roo\sample\app\controllers\helloworld.py", line 14, in index
+        self.xrender()
+      File "G:\Python27\lib\site-packages\roo-0.1-py2.7.egg\roo\controller.py", line 72, in xrender
+        return tornado.web.RequestHandler.render(self, template_name, **kwargs)
+      File "G:\Python27\lib\site-packages\tornado\web.py", line 500, in render
+        html = self.render_string(template_name, **kwargs)
+      File "G:\Python27\lib\site-packages\tornado\web.py", line 604, in render_string
+        t = loader.load(template_name)
+      File "G:\Python27\lib\site-packages\tornado\template.py", line 331, in load
+        self.templates[name] = self._create_template(name)
+      File "G:\Python27\lib\site-packages\tornado\template.py", line 363, in _create_template
+        template = Template(f.read(), name=name, loader=self)
+      File "G:\Python27\lib\site-packages\tornado\template.py", line 221, in __init__
+        self.code = self._generate_python(loader, compress_whitespace)
+      File "G:\Python27\lib\site-packages\tornado\template.py", line 272, in _generate_python
+        ancestors = self._get_ancestors(loader)
+      File "G:\Python27\lib\site-packages\tornado\template.py", line 291, in _get_ancestors
+        template = loader.load(chunk.name, self.name)
+      File "G:\Python27\lib\site-packages\tornado\template.py", line 331, in load
+        self.templates[name] = self._create_template(name)
+      File "G:\Python27\lib\site-packages\tornado\template.py", line 362, in _create_template
+        f = open(path, "rb")
+    IOError: [Errno 2] No such file or directory: u'D:\\Projects\\Tink\\Roo\\sample\\app\\views\\helloworld\\base.html'
+[2013-04-13 13:03:16 ERROR root:1462] 500 GET /helloworld/index (::1) 11.00ms
+[2013-04-13 13:05:38 ERROR root:1658] Could not open static file '/css/bootstrap.min.css'
+[2013-04-13 13:05:38 ERROR root:1658] Could not open static file '/css/bootstrap-responsive.min.css'
+[2013-04-13 13:05:38 ERROR root:1658] Could not open static file 'apple-touch-icon-144-precomposed.png'
+[2013-04-13 13:05:38 ERROR root:1658] Could not open static file 'apple-touch-icon-114-precomposed.png'
+[2013-04-13 13:05:38 ERROR root:1658] Could not open static file 'apple-touch-icon-72-precomposed.png'
+[2013-04-13 13:05:38 ERROR root:1658] Could not open static file 'apple-touch-icon-57-precomposed.png'
+[2013-04-13 13:05:38 ERROR root:1658] Could not open static file '/css/app.css'
+[2013-04-13 13:05:38 ERROR root:1658] Could not open static file '/js/vendor/modernizr-2.6.2.min.js'
+[2013-04-13 13:05:38 ERROR root:1658] Could not open static file '/js/vendor/jquery-1.9.0.min.js'
+[2013-04-13 13:05:38 ERROR root:1658] Could not open static file '/js/vendor/bootstrap.min.js'
+[2013-04-13 13:05:38 ERROR root:1658] Could not open static file '/js/plugins.js'
+[2013-04-13 13:05:38 ERROR root:1658] Could not open static file '/js/main.js'
+[2013-04-13 13:05:38 INFO root:1462] 200 GET /helloworld/index (::1) 22.00ms
+[2013-04-13 13:05:38 WARNING root:1077] 403 GET /static//css/bootstrap.min.css (::1): \css\bootstrap.min.css is not in root static directory
+[2013-04-13 13:05:38 WARNING root:1462] 403 GET /static//css/bootstrap.min.css (::1) 8.00ms
+[2013-04-13 13:05:38 INFO root:1462] 200 GET /static/favicon.ico?v=338ab (::1) 52.00ms
+[2013-04-13 13:05:38 WARNING root:1077] 403 GET /static//css/app.css (::1): \css\app.css is not in root static directory
+[2013-04-13 13:05:38 WARNING root:1462] 403 GET /static//css/app.css (::1) 2.00ms
+[2013-04-13 13:05:38 WARNING root:1077] 403 GET /static//js/vendor/modernizr-2.6.2.min.js (::1): \js\vendor\modernizr-2.6.2.min.js is not in root static directory
+[2013-04-13 13:05:38 WARNING root:1462] 403 GET /static//js/vendor/modernizr-2.6.2.min.js (::1) 12.00ms
+[2013-04-13 13:05:38 WARNING root:1077] 403 GET /static//css/bootstrap-responsive.min.css (::1): \css\bootstrap-responsive.min.css is not in root static directory
+[2013-04-13 13:05:38 WARNING root:1462] 403 GET /static//css/bootstrap-responsive.min.css (::1) 1.00ms
+[2013-04-13 13:05:38 WARNING root:1077] 403 GET /static//js/main.js (::1): \js\main.js is not in root static directory
+[2013-04-13 13:05:38 WARNING root:1462] 403 GET /static//js/main.js (::1) 1.00ms
+[2013-04-13 13:05:38 WARNING root:1077] 403 GET /static//js/vendor/bootstrap.min.js (::1): \js\vendor\bootstrap.min.js is not in root static directory
+[2013-04-13 13:05:38 WARNING root:1462] 403 GET /static//js/vendor/bootstrap.min.js (::1) 1.00ms
+[2013-04-13 13:05:38 WARNING root:1077] 403 GET /static//js/plugins.js (::1): \js\plugins.js is not in root static directory
+[2013-04-13 13:05:38 WARNING root:1462] 403 GET /static//js/plugins.js (::1) 1.00ms
+[2013-04-13 13:05:38 WARNING root:1077] 403 GET /static//js/vendor/bootstrap.min.js (::1): \js\vendor\bootstrap.min.js is not in root static directory
+[2013-04-13 13:05:38 WARNING root:1462] 403 GET /static//js/vendor/bootstrap.min.js (::1) 1.00ms
+[2013-04-13 13:05:38 WARNING root:1077] 403 GET /static//js/plugins.js (::1): \js\plugins.js is not in root static directory
+[2013-04-13 13:05:38 WARNING root:1462] 403 GET /static//js/plugins.js (::1) 1.00ms
+[2013-04-13 13:05:38 WARNING root:1077] 403 GET /static//js/main.js (::1): \js\main.js is not in root static directory
+[2013-04-13 13:05:38 WARNING root:1462] 403 GET /static//js/main.js (::1) 1.00ms
+[2013-04-13 13:06:30 ERROR root:1658] Could not open static file 'favicon.ico'
+[2013-04-13 13:06:30 ERROR root:1658] Could not open static file '/css/bootstrap.min.css'
+[2013-04-13 13:06:30 ERROR root:1658] Could not open static file '/css/bootstrap-responsive.min.css'
+[2013-04-13 13:06:30 ERROR root:1658] Could not open static file 'apple-touch-icon-144-precomposed.png'
+[2013-04-13 13:06:30 ERROR root:1658] Could not open static file 'apple-touch-icon-114-precomposed.png'
+[2013-04-13 13:06:30 ERROR root:1658] Could not open static file 'apple-touch-icon-72-precomposed.png'
+[2013-04-13 13:06:30 ERROR root:1658] Could not open static file 'apple-touch-icon-57-precomposed.png'
+[2013-04-13 13:06:30 ERROR root:1658] Could not open static file '/css/app.css'
+[2013-04-13 13:06:30 ERROR root:1658] Could not open static file '/js/vendor/modernizr-2.6.2.min.js'
+[2013-04-13 13:06:30 ERROR root:1658] Could not open static file '/js/vendor/jquery-1.9.0.min.js'
+[2013-04-13 13:06:30 ERROR root:1658] Could not open static file '/js/vendor/bootstrap.min.js'
+[2013-04-13 13:06:30 ERROR root:1658] Could not open static file '/js/plugins.js'
+[2013-04-13 13:06:30 ERROR root:1658] Could not open static file '/js/main.js'
+[2013-04-13 13:06:30 INFO root:1462] 200 GET /helloworld/index (::1) 15.00ms
+[2013-04-13 13:06:30 WARNING root:1077] 403 GET /static//css/bootstrap.min.css (::1): \css\bootstrap.min.css is not in root static directory
+[2013-04-13 13:06:30 WARNING root:1462] 403 GET /static//css/bootstrap.min.css (::1) 3.00ms
+[2013-04-13 13:06:30 WARNING root:1077] 403 GET /static//js/vendor/modernizr-2.6.2.min.js (::1): \js\vendor\modernizr-2.6.2.min.js is not in root static directory
+[2013-04-13 13:06:30 WARNING root:1462] 403 GET /static//js/vendor/modernizr-2.6.2.min.js (::1) 1.00ms
+[2013-04-13 13:06:30 WARNING root:1077] 403 GET /static//css/bootstrap-responsive.min.css (::1): \css\bootstrap-responsive.min.css is not in root static directory
+[2013-04-13 13:06:30 WARNING root:1462] 403 GET /static//css/bootstrap-responsive.min.css (::1) 1.00ms
+[2013-04-13 13:06:30 WARNING root:1077] 403 GET /static//css/app.css (::1): \css\app.css is not in root static directory
+[2013-04-13 13:06:30 WARNING root:1462] 403 GET /static//css/app.css (::1) 2.00ms
+[2013-04-13 13:06:30 WARNING root:1462] 404 GET /static/favicon.ico (::1) 1.00ms
+[2013-04-13 13:06:30 WARNING root:1077] 403 GET /static//js/vendor/bootstrap.min.js (::1): \js\vendor\bootstrap.min.js is not in root static directory
+[2013-04-13 13:06:30 WARNING root:1462] 403 GET /static//js/vendor/bootstrap.min.js (::1) 1.00ms
+[2013-04-13 13:06:30 WARNING root:1077] 403 GET /static//js/main.js (::1): \js\main.js is not in root static directory
+[2013-04-13 13:06:30 WARNING root:1462] 403 GET /static//js/main.js (::1) 1.00ms
+[2013-04-13 13:06:30 WARNING root:1462] 404 GET /static/favicon.ico (::1) 1.00ms
+[2013-04-13 13:06:30 WARNING root:1077] 403 GET /static//js/plugins.js (::1): \js\plugins.js is not in root static directory
+[2013-04-13 13:06:30 WARNING root:1462] 403 GET /static//js/plugins.js (::1) 1.00ms
+[2013-04-13 13:06:30 WARNING root:1077] 403 GET /static//js/vendor/bootstrap.min.js (::1): \js\vendor\bootstrap.min.js is not in root static directory
+[2013-04-13 13:06:30 WARNING root:1462] 403 GET /static//js/vendor/bootstrap.min.js (::1) 1.00ms
+[2013-04-13 13:06:30 WARNING root:1077] 403 GET /static//js/plugins.js (::1): \js\plugins.js is not in root static directory
+[2013-04-13 13:06:30 WARNING root:1462] 403 GET /static//js/plugins.js (::1) 2.00ms
+[2013-04-13 13:06:30 WARNING root:1077] 403 GET /static//js/main.js (::1): \js\main.js is not in root static directory
+[2013-04-13 13:06:30 WARNING root:1462] 403 GET /static//js/main.js (::1) 1.00ms
+[2013-04-13 13:06:46 INFO roo.mvc:78] loading http request handlers
+[2013-04-13 13:06:46 INFO roo.mvc:105] loading plugins
+[2013-04-13 13:06:46 INFO roo.mvc:119] loading plugins, [<Plugin session>, <Plugin error>]
+[2013-04-13 13:06:46 INFO roo.mvc:125] loading ui modeuls
+[2013-04-13 13:06:46 INFO roo.mvc:56] settings: {'login_url': '/account/index', 'template_path': 'D:\\Projects\\Tink\\Roo\\sample\\app\\views', 'title': u'_site_title', '__builtins__': {'bytearray': <type 'bytearray'>, 'IndexError': <type 'exceptions.IndexError'>, 'all': <built-in function all>, 'help': Type help() for interactive help, or help(object) for help about object., 'vars': <built-in function vars>, 'SyntaxError': <type 'exceptions.SyntaxError'>, 'unicode': <type 'unicode'>, 'UnicodeDecodeError': <type 'exceptions.UnicodeDecodeError'>, 'memoryview': <type 'memoryview'>, 'isinstance': <built-in function isinstance>, 'copyright': Copyright (c) 2001-2012 Python Software Foundation.
+    All Rights Reserved.
+    
+    Copyright (c) 2000 BeOpen.com.
+    All Rights Reserved.
+    
+    Copyright (c) 1995-2001 Corporation for National Research Initiatives.
+    All Rights Reserved.
+    
+    Copyright (c) 1991-1995 Stichting Mathematisch Centrum, Amsterdam.
+    All Rights Reserved., 'NameError': <type 'exceptions.NameError'>, 'BytesWarning': <type 'exceptions.BytesWarning'>, 'dict': <type 'dict'>, 'input': <built-in function input>, 'oct': <built-in function oct>, 'bin': <built-in function bin>, 'SystemExit': <type 'exceptions.SystemExit'>, 'StandardError': <type 'exceptions.StandardError'>, 'format': <built-in function format>, 'repr': <built-in function repr>, 'sorted': <built-in function sorted>, 'False': False, 'RuntimeWarning': <type 'exceptions.RuntimeWarning'>, 'list': <type 'list'>, 'iter': <built-in function iter>, 'reload': <built-in function reload>, 'Warning': <type 'exceptions.Warning'>, '__package__': None, 'round': <built-in function round>, 'dir': <built-in function dir>, 'cmp': <built-in function cmp>, 'set': <type 'set'>, 'bytes': <type 'str'>, 'reduce': <built-in function reduce>, 'intern': <built-in function intern>, 'issubclass': <built-in function issubclass>, 'Ellipsis': Ellipsis, 'EOFError': <type 'exceptions.EOFError'>, 'locals': <built-in function locals>, 'BufferError': <type 'exceptions.BufferError'>, 'slice': <type 'slice'>, 'FloatingPointError': <type 'exceptions.FloatingPointError'>, 'sum': <built-in function sum>, 'getattr': <built-in function getattr>, 'abs': <built-in function abs>, 'exit': Use exit() or Ctrl-Z plus Return to exit, 'print': <built-in function print>, 'True': True, 'FutureWarning': <type 'exceptions.FutureWarning'>, 'ImportWarning': <type 'exceptions.ImportWarning'>, 'None': None, 'hash': <built-in function hash>, 'ReferenceError': <type 'exceptions.ReferenceError'>, 'len': <built-in function len>, 'credits':     Thanks to CWI, CNRI, BeOpen.com, Zope Corporation and a cast of thousands
+        for supporting Python development.  See www.python.org for more information., 'frozenset': <type 'frozenset'>, '__name__': '__builtin__', 'ord': <built-in function ord>, 'super': <type 'super'>, 'TypeError': <type 'exceptions.TypeError'>, 'license': Type license() to see the full license text, 'KeyboardInterrupt': <type 'exceptions.KeyboardInterrupt'>, 'UserWarning': <type 'exceptions.UserWarning'>, 'filter': <built-in function filter>, 'range': <built-in function range>, 'staticmethod': <type 'staticmethod'>, 'SystemError': <type 'exceptions.SystemError'>, 'BaseException': <type 'exceptions.BaseException'>, 'pow': <built-in function pow>, 'RuntimeError': <type 'exceptions.RuntimeError'>, 'float': <type 'float'>, 'MemoryError': <type 'exceptions.MemoryError'>, 'StopIteration': <type 'exceptions.StopIteration'>, 'globals': <built-in function globals>, 'divmod': <built-in function divmod>, 'enumerate': <type 'enumerate'>, 'apply': <built-in function apply>, 'LookupError': <type 'exceptions.LookupError'>, 'open': <built-in function open>, 'quit': Use quit() or Ctrl-Z plus Return to exit, 'basestring': <type 'basestring'>, 'UnicodeError': <type 'exceptions.UnicodeError'>, 'zip': <built-in function zip>, 'hex': <built-in function hex>, 'long': <type 'long'>, 'next': <built-in function next>, 'ImportError': <type 'exceptions.ImportError'>, 'chr': <built-in function chr>, 'xrange': <type 'xrange'>, 'type': <type 'type'>, '__doc__': "Built-in functions, exceptions, and other objects.\n\nNoteworthy: None is the `nil' object; Ellipsis represents `...' in slices.", 'Exception': <type 'exceptions.Exception'>, 'tuple': <type 'tuple'>, 'UnicodeTranslateError': <type 'exceptions.UnicodeTranslateError'>, 'reversed': <type 'reversed'>, 'UnicodeEncodeError': <type 'exceptions.UnicodeEncodeError'>, 'IOError': <type 'exceptions.IOError'>, 'hasattr': <built-in function hasattr>, 'delattr': <built-in function delattr>, 'setattr': <built-in function setattr>, 'raw_input': <built-in function raw_input>, 'SyntaxWarning': <type 'exceptions.SyntaxWarning'>, 'compile': <built-in function compile>, 'ArithmeticError': <type 'exceptions.ArithmeticError'>, 'str': <type 'str'>, 'property': <type 'property'>, 'GeneratorExit': <type 'exceptions.GeneratorExit'>, 'int': <type 'int'>, '__import__': <built-in function __import__>, 'KeyError': <type 'exceptions.KeyError'>, 'coerce': <built-in function coerce>, 'PendingDeprecationWarning': <type 'exceptions.PendingDeprecationWarning'>, 'file': <type 'file'>, 'EnvironmentError': <type 'exceptions.EnvironmentError'>, 'unichr': <built-in function unichr>, 'id': <built-in function id>, 'OSError': <type 'exceptions.OSError'>, 'DeprecationWarning': <type 'exceptions.DeprecationWarning'>, 'min': <built-in function min>, 'UnicodeWarning': <type 'exceptions.UnicodeWarning'>, 'execfile': <built-in function execfile>, 'any': <built-in function any>, 'complex': <type 'complex'>, 'bool': <type 'bool'>, 'ValueError': <type 'exceptions.ValueError'>, 'NotImplemented': NotImplemented, 'map': <built-in function map>, 'buffer': <type 'buffer'>, 'max': <built-in function max>, 'object': <type 'object'>, 'TabError': <type 'exceptions.TabError'>, 'callable': <built-in function callable>, 'ZeroDivisionError': <type 'exceptions.ZeroDivisionError'>, 'eval': <built-in function eval>, '__debug__': True, 'IndentationError': <type 'exceptions.IndentationError'>, 'AssertionError': <type 'exceptions.AssertionError'>, 'classmethod': <type 'classmethod'>, 'UnboundLocalError': <type 'exceptions.UnboundLocalError'>, 'NotImplementedError': <type 'exceptions.NotImplementedError'>, 'AttributeError': <type 'exceptions.AttributeError'>, 'OverflowError': <type 'exceptions.OverflowError'>, 'WindowsError': <type 'exceptions.WindowsError'>}, 'root': 'D:\\Projects\\Tink\\Roo\\sample', '__file__': 'D:\\Projects\\Tink\\Roo\\sample\\settings.pyc', 'site': {'domain': u'http://sample.dev.com', 'login_url': '/account/index', 'feedback': u'_site_feedback_mail', 'title': u'_site_title', 'cdn': u'http://sample.dev.com', 'admin_mail': u'_site_admin_mail', 'keywords': u'_site_keyworks_', 'xsrf_cookies': True, 'cookie_secret': '61oETzKXQAGaYdkL5gEmGeJJFuYh7EQnp2XdTP1o/Vo=', 'debug': True, 'logging': 'debug', 'gzip': False, 'webmaster': u'_site_webmaster_mail', 'description': u'_site_description_'}, 'ODict': <class 'roo.lib.dictfy.ODict'>, '__package__': None, 'session': {'cookie_secret': '61oETzKXQAGaYdkL5gEmGeJJFuYh7EQnp2XdTP1o/Vo=', 'cookie_id': '_sess', 'auth_cookie': '_auth', 'key': u'sample', 'expires_days': 30}, 'cookie_secret': '61oETzKXQAGaYdkL5gEmGeJJFuYh7EQnp2XdTP1o/Vo=', 'plugins': [], 'debug': True, '__name__': 'settings', 'ui_modules': {}, 'xsrf_cookies': True, '__doc__': None, 'static_path': 'D:\\Projects\\Tink\\Roo\\sample\\public'}
+[2013-04-13 13:06:46 INFO roo.mvc:164] Starting at D:\Projects\Tink\Roo\sample
+[2013-04-13 13:06:50 ERROR root:1658] Could not open static file 'favicon.ico'
+[2013-04-13 13:06:50 ERROR root:1658] Could not open static file '/css/bootstrap.min.css'
+[2013-04-13 13:06:50 ERROR root:1658] Could not open static file '/css/bootstrap-responsive.min.css'
+[2013-04-13 13:06:50 ERROR root:1658] Could not open static file 'apple-touch-icon-144-precomposed.png'
+[2013-04-13 13:06:50 ERROR root:1658] Could not open static file 'apple-touch-icon-114-precomposed.png'
+[2013-04-13 13:06:50 ERROR root:1658] Could not open static file 'apple-touch-icon-72-precomposed.png'
+[2013-04-13 13:06:50 ERROR root:1658] Could not open static file 'apple-touch-icon-57-precomposed.png'
+[2013-04-13 13:06:50 ERROR root:1658] Could not open static file '/css/app.css'
+[2013-04-13 13:06:50 ERROR root:1658] Could not open static file '/js/vendor/modernizr-2.6.2.min.js'
+[2013-04-13 13:06:50 ERROR root:1658] Could not open static file '/js/vendor/jquery-1.9.0.min.js'
+[2013-04-13 13:06:50 ERROR root:1658] Could not open static file '/js/vendor/bootstrap.min.js'
+[2013-04-13 13:06:50 ERROR root:1658] Could not open static file '/js/plugins.js'
+[2013-04-13 13:06:50 ERROR root:1658] Could not open static file '/js/main.js'
+[2013-04-13 13:06:50 INFO root:1462] 304 GET /helloworld/index (::1) 15.00ms
+[2013-04-13 13:06:50 WARNING root:1077] 403 GET /static//css/bootstrap.min.css (::1): \css\bootstrap.min.css is not in root static directory
+[2013-04-13 13:06:50 WARNING root:1462] 403 GET /static//css/bootstrap.min.css (::1) 2.00ms
+[2013-04-13 13:06:50 WARNING root:1077] 403 GET /static//css/bootstrap-responsive.min.css (::1): \css\bootstrap-responsive.min.css is not in root static directory
+[2013-04-13 13:06:50 WARNING root:1462] 403 GET /static//css/bootstrap-responsive.min.css (::1) 1.00ms
+[2013-04-13 13:06:50 WARNING root:1077] 403 GET /static//css/app.css (::1): \css\app.css is not in root static directory
+[2013-04-13 13:06:50 WARNING root:1462] 403 GET /static//css/app.css (::1) 1.00ms
+[2013-04-13 13:06:50 WARNING root:1077] 403 GET /static//js/vendor/modernizr-2.6.2.min.js (::1): \js\vendor\modernizr-2.6.2.min.js is not in root static directory
+[2013-04-13 13:06:50 WARNING root:1462] 403 GET /static//js/vendor/modernizr-2.6.2.min.js (::1) 1.00ms
+[2013-04-13 13:06:50 WARNING root:1077] 403 GET /static//js/plugins.js (::1): \js\plugins.js is not in root static directory
+[2013-04-13 13:06:50 WARNING root:1462] 403 GET /static//js/plugins.js (::1) 2.00ms
+[2013-04-13 13:06:50 WARNING root:1077] 403 GET /static//js/vendor/bootstrap.min.js (::1): \js\vendor\bootstrap.min.js is not in root static directory
+[2013-04-13 13:06:50 WARNING root:1462] 403 GET /static//js/vendor/bootstrap.min.js (::1) 0.00ms
+[2013-04-13 13:06:50 WARNING root:1077] 403 GET /static//js/main.js (::1): \js\main.js is not in root static directory
+[2013-04-13 13:06:50 WARNING root:1462] 403 GET /static//js/main.js (::1) 1.00ms
+[2013-04-13 13:06:50 WARNING root:1077] 403 GET /static//js/vendor/bootstrap.min.js (::1): \js\vendor\bootstrap.min.js is not in root static directory
+[2013-04-13 13:06:50 WARNING root:1462] 403 GET /static//js/vendor/bootstrap.min.js (::1) 1.00ms
+[2013-04-13 13:06:50 WARNING root:1077] 403 GET /static//js/plugins.js (::1): \js\plugins.js is not in root static directory
+[2013-04-13 13:06:50 WARNING root:1462] 403 GET /static//js/plugins.js (::1) 2.00ms
+[2013-04-13 13:06:50 WARNING root:1077] 403 GET /static//js/main.js (::1): \js\main.js is not in root static directory
+[2013-04-13 13:06:50 WARNING root:1462] 403 GET /static//js/main.js (::1) 1.00ms
+[2013-04-13 13:11:01 ERROR root:1658] Could not open static file 'favicon.ico'
+[2013-04-13 13:11:01 ERROR root:1658] Could not open static file 'css/bootstrap.min.css'
+[2013-04-13 13:11:01 ERROR root:1658] Could not open static file 'css/bootstrap-responsive.min.css'
+[2013-04-13 13:11:01 ERROR root:1658] Could not open static file 'apple-touch-icon-144-precomposed.png'
+[2013-04-13 13:11:01 ERROR root:1658] Could not open static file 'apple-touch-icon-114-precomposed.png'
+[2013-04-13 13:11:01 ERROR root:1658] Could not open static file 'apple-touch-icon-72-precomposed.png'
+[2013-04-13 13:11:01 ERROR root:1658] Could not open static file 'apple-touch-icon-57-precomposed.png'
+[2013-04-13 13:11:01 ERROR root:1658] Could not open static file 'css/app.css'
+[2013-04-13 13:11:01 ERROR root:1658] Could not open static file 'js/vendor/modernizr-2.6.2.min.js'
+[2013-04-13 13:11:01 ERROR root:1658] Could not open static file 'js/vendor/jquery-1.9.0.min.js'
+[2013-04-13 13:11:01 ERROR root:1658] Could not open static file 'js/vendor/bootstrap.min.js'
+[2013-04-13 13:11:01 ERROR root:1658] Could not open static file 'js/plugins.js'
+[2013-04-13 13:11:01 ERROR root:1658] Could not open static file 'js/main.js'
+[2013-04-13 13:11:01 INFO root:1462] 200 GET /helloworld/index (::1) 13.00ms
+[2013-04-13 13:11:01 WARNING root:1462] 404 GET /static/css/bootstrap.min.css (::1) 2.00ms
+[2013-04-13 13:11:02 WARNING root:1462] 404 GET /static/css/bootstrap-responsive.min.css (::1) 4.00ms
+[2013-04-13 13:11:02 WARNING root:1462] 404 GET /static/css/app.css (::1) 2.00ms
+[2013-04-13 13:11:02 WARNING root:1462] 404 GET /static/js/vendor/modernizr-2.6.2.min.js (::1) 0.00ms
+[2013-04-13 13:11:02 WARNING root:1462] 404 GET /static/js/vendor/bootstrap.min.js (::1) 1.00ms
+[2013-04-13 13:11:02 WARNING root:1462] 404 GET /static/js/plugins.js (::1) 1.00ms
+[2013-04-13 13:11:02 WARNING root:1462] 404 GET /static/js/main.js (::1) 1.00ms
+[2013-04-13 13:11:02 WARNING root:1462] 404 GET /static/js/vendor/bootstrap.min.js (::1) 1.00ms
+[2013-04-13 13:11:02 WARNING root:1462] 404 GET /static/js/plugins.js (::1) 1.00ms
+[2013-04-13 13:11:02 WARNING root:1462] 404 GET /static/js/main.js (::1) 1.00ms
+[2013-04-13 13:13:45 INFO root:180] G:\Python27\lib\site-packages\roo-0.1-py2.7.egg\roo\__init__.py modified; restarting server
+[2013-04-13 13:13:46 INFO roo.mvc:78] loading http request handlers
+[2013-04-13 13:13:46 INFO roo.mvc:105] loading plugins
+[2013-04-13 13:13:46 INFO roo.mvc:119] loading plugins, [<Plugin session>, <Plugin error>]
+[2013-04-13 13:13:46 INFO roo.mvc:125] loading ui modeuls
+[2013-04-13 13:13:46 INFO roo.mvc:164] Starting at D:\Projects\Tink\Roo\sample
+[2013-04-13 13:13:52 ERROR root:1658] Could not open static file 'apple-touch-icon-144-precomposed.png'
+[2013-04-13 13:13:52 ERROR root:1658] Could not open static file 'apple-touch-icon-114-precomposed.png'
+[2013-04-13 13:13:52 ERROR root:1658] Could not open static file 'apple-touch-icon-72-precomposed.png'
+[2013-04-13 13:13:52 ERROR root:1658] Could not open static file 'apple-touch-icon-57-precomposed.png'
+[2013-04-13 13:13:52 INFO root:1462] 200 GET /helloworld/index (::1) 17.00ms
+[2013-04-13 13:13:52 INFO root:1462] 200 GET /static/css/bootstrap.min.css?v=323f5 (::1) 45.00ms
+[2013-04-13 13:13:52 INFO root:1462] 200 GET /static/css/bootstrap-responsive.min.css?v=12d88 (::1) 2.00ms
+[2013-04-13 13:13:52 INFO root:1462] 200 GET /static/css/app.css?v=d41d8 (::1) 12.00ms
+[2013-04-13 13:13:52 INFO root:1462] 200 GET /static/js/vendor/modernizr-2.6.2.min.js?v=42306 (::1) 2.00ms
+[2013-04-13 13:13:52 INFO root:1462] 200 GET /static/js/vendor/bootstrap.min.js?v=2916b (::1) 3.00ms
+[2013-04-13 13:13:52 INFO root:1462] 200 GET /static/js/plugins.js?v=e2679 (::1) 1.00ms
+[2013-04-13 13:13:52 INFO root:1462] 200 GET /static/js/main.js?v=68b32 (::1) 1.00ms
+[2013-04-13 13:14:53 INFO root:180] D:\Projects\Tink\Roo\sample\app\controllers\helloworld.py modified; restarting server
+[2013-04-13 13:14:54 INFO roo.mvc:78] loading http request handlers
+[2013-04-13 13:14:54 INFO roo.mvc:105] loading plugins
+[2013-04-13 13:14:54 INFO roo.mvc:119] loading plugins, [<Plugin session>, <Plugin error>]
+[2013-04-13 13:14:54 INFO roo.mvc:125] loading ui modeuls
+[2013-04-13 13:14:54 INFO roo.mvc:164] Starting at D:\Projects\Tink\Roo\sample
+[2013-04-13 13:15:03 INFO root:180] D:\Projects\Tink\Roo\sample\app\controllers\helloworld.py modified; restarting server
+[2013-04-13 13:15:04 INFO roo.mvc:78] loading http request handlers
+[2013-04-13 13:15:04 INFO roo.mvc:105] loading plugins
+[2013-04-13 13:15:04 INFO roo.mvc:119] loading plugins, [<Plugin session>, <Plugin error>]
+[2013-04-13 13:15:04 INFO roo.mvc:125] loading ui modeuls
+[2013-04-13 13:15:04 INFO roo.mvc:164] Starting at D:\Projects\Tink\Roo\sample
+[2013-04-13 13:15:08 INFO root:180] D:\Projects\Tink\Roo\sample\app\controllers\helloworld.py modified; restarting server
+[2013-04-13 13:15:08 INFO roo.mvc:78] loading http request handlers
+[2013-04-13 13:15:08 INFO roo.mvc:105] loading plugins
+[2013-04-13 13:15:08 INFO roo.mvc:119] loading plugins, [<Plugin session>, <Plugin error>]
+[2013-04-13 13:15:08 INFO roo.mvc:125] loading ui modeuls
+[2013-04-13 13:15:08 INFO roo.mvc:164] Starting at D:\Projects\Tink\Roo\sample
+[2013-04-13 13:15:13 ERROR root:1658] Could not open static file 'apple-touch-icon-144-precomposed.png'
+[2013-04-13 13:15:13 ERROR root:1658] Could not open static file 'apple-touch-icon-114-precomposed.png'
+[2013-04-13 13:15:13 ERROR root:1658] Could not open static file 'apple-touch-icon-72-precomposed.png'
+[2013-04-13 13:15:13 ERROR root:1658] Could not open static file 'apple-touch-icon-57-precomposed.png'
+[2013-04-13 13:15:13 INFO root:1462] 304 GET /helloworld/index (::1) 17.00ms
+[2013-04-13 13:15:13 INFO root:1462] 304 GET /static/css/bootstrap.min.css?v=323f5 (::1) 50.00ms
+[2013-04-13 13:15:13 INFO root:1462] 304 GET /static/css/bootstrap-responsive.min.css?v=12d88 (::1) 1.00ms
+[2013-04-13 13:15:13 INFO root:1462] 304 GET /static/css/app.css?v=d41d8 (::1) 6.00ms
+[2013-04-13 13:15:13 INFO root:1462] 304 GET /static/js/vendor/modernizr-2.6.2.min.js?v=42306 (::1) 1.00ms
+[2013-04-13 13:15:13 INFO root:1462] 304 GET /static/js/vendor/bootstrap.min.js?v=2916b (::1) 1.00ms
+[2013-04-13 13:15:13 INFO root:1462] 304 GET /static/js/main.js?v=68b32 (::1) 2.00ms
+[2013-04-13 13:15:13 INFO root:1462] 304 GET /static/js/plugins.js?v=e2679 (::1) 7.00ms
+[2013-04-13 13:15:17 INFO root:1462] 200 GET /helloworld/say (::1) 1.00ms
+[2013-04-13 13:18:02 INFO root:180] D:\Projects\Tink\Roo\sample\app\controllers\helloworld.py modified; restarting server
+[2013-04-13 13:18:02 INFO roo.mvc:78] loading http request handlers
+[2013-04-13 13:18:02 INFO roo.mvc:105] loading plugins
+[2013-04-13 13:18:02 INFO roo.mvc:119] loading plugins, [<Plugin session>, <Plugin error>]
+[2013-04-13 13:18:02 INFO roo.mvc:125] loading ui modeuls
+[2013-04-13 13:18:02 INFO roo.mvc:164] Starting at D:\Projects\Tink\Roo\sample
+[2013-04-13 13:18:27 INFO root:180] D:\Projects\Tink\Roo\sample\app\controllers\helloworld.py modified; restarting server
+[2013-04-13 13:18:27 INFO roo.mvc:78] loading http request handlers
+[2013-04-13 13:18:27 INFO roo.mvc:105] loading plugins
+[2013-04-13 13:18:27 INFO roo.mvc:119] loading plugins, [<Plugin session>, <Plugin error>]
+[2013-04-13 13:18:27 INFO roo.mvc:125] loading ui modeuls
+[2013-04-13 13:18:27 INFO roo.mvc:164] Starting at D:\Projects\Tink\Roo\sample
+[2013-04-13 13:20:43 INFO root:180] D:\Projects\Tink\Roo\sample\settings.py modified; restarting server
+[2013-04-13 13:20:43 INFO roo.mvc:78] loading http request handlers
+[2013-04-13 13:20:43 INFO roo.mvc:105] loading plugins
+[2013-04-13 13:20:43 INFO roo.mvc:119] loading plugins, [<Plugin session>, <Plugin error>]
+[2013-04-13 13:20:43 INFO roo.mvc:125] loading ui modeuls
+[2013-04-13 13:20:43 INFO roo.mvc:164] Starting at D:\Projects\Tink\Roo\sample
+[2013-04-13 13:21:10 INFO root:1462] 200 GET /helloworld/say (::1) 1.00ms
+[2013-04-13 13:21:16 ERROR root:264] helloworld/index.html code:
+      1  def _execute():  # base.html:0
+      2      _buffer = []  # base.html:0
+      3      _append = _buffer.append  # base.html:0
+      4      _append('<!doctype html>\n<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->\n<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->\n<!--[if IE 8]> <html class="no-js lt-ie9" lang="en"> <![endif]-->\n<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->\n<head>\n<meta charset="utf-8">\n<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">\n')  # base.html:9
+      5      _append('<title>')  # base.html:9 (via base.html:9)
+      6      _tmp = config.site.title  # base.html:9 (via base.html:9)
+      7      if isinstance(_tmp, _string_types): _tmp = _utf8(_tmp)  # base.html:9 (via base.html:9)
+      8      else: _tmp = _utf8(str(_tmp))  # base.html:9 (via base.html:9)
+      9      _tmp = _utf8(xhtml_escape(_tmp))  # base.html:9 (via base.html:9)
+     10      _append(_tmp)  # base.html:9 (via base.html:9)
+     11      _append('</title>')  # base.html:9 (via base.html:9)
+     12      _append('\n<meta name="description" content="')  # base.html:10
+     13      _tmp = config.site.description  # base.html:10
+     14      if isinstance(_tmp, _string_types): _tmp = _utf8(_tmp)  # base.html:10
+     15      else: _tmp = _utf8(str(_tmp))  # base.html:10
+     16      _tmp = _utf8(xhtml_escape(_tmp))  # base.html:10
+     17      _append(_tmp)  # base.html:10
+     18      _append('">\n<meta name="author" content="">\n<meta name="viewport" content="width=device-width">\n<meta property="wb:webmaster" content="0c4ecf5405017039" />\n<link rel="shortcut icon" type="image/png" href="')  # base.html:14
+     19      _tmp = static_url('favicon.ico')  # base.html:14
+     20      if isinstance(_tmp, _string_types): _tmp = _utf8(_tmp)  # base.html:14
+     21      else: _tmp = _utf8(str(_tmp))  # base.html:14
+     22      _tmp = _utf8(xhtml_escape(_tmp))  # base.html:14
+     23      _append(_tmp)  # base.html:14
+     24      _append('">\n<link rel="stylesheet" href="')  # base.html:15
+     25      _tmp = static_url('css/bootstrap.min.css')  # base.html:15
+     26      if isinstance(_tmp, _string_types): _tmp = _utf8(_tmp)  # base.html:15
+     27      else: _tmp = _utf8(str(_tmp))  # base.html:15
+     28      _tmp = _utf8(xhtml_escape(_tmp))  # base.html:15
+     29      _append(_tmp)  # base.html:15
+     30      _append('">\n<style>\nbody {\npadding-top: 60px;\npadding-bottom: 40px;\n}\n</style>\n<link rel="stylesheet" href="')  # base.html:22
+     31      _tmp = static_url('css/bootstrap-responsive.min.css')  # base.html:22
+     32      if isinstance(_tmp, _string_types): _tmp = _utf8(_tmp)  # base.html:22
+     33      else: _tmp = _utf8(str(_tmp))  # base.html:22
+     34      _tmp = _utf8(xhtml_escape(_tmp))  # base.html:22
+     35      _append(_tmp)  # base.html:22
+     36      _append('">\n<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->\n<!--[if lt IE 9]>\n<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>\n<![endif]-->\n<!-- Le fav and touch icons -->\n<link rel="apple-touch-icon-precomposed" sizes="144x144" href="')  # base.html:28
+     37      _tmp = static_url('apple-touch-icon-144-precomposed.png')  # base.html:28
+     38      if isinstance(_tmp, _string_types): _tmp = _utf8(_tmp)  # base.html:28
+     39      else: _tmp = _utf8(str(_tmp))  # base.html:28
+     40      _tmp = _utf8(xhtml_escape(_tmp))  # base.html:28
+     41      _append(_tmp)  # base.html:28
+     42      _append('">\n<link rel="apple-touch-icon-precomposed" sizes="114x114" href="')  # base.html:29
+     43      _tmp = static_url('apple-touch-icon-114-precomposed.png')  # base.html:29
+     44      if isinstance(_tmp, _string_types): _tmp = _utf8(_tmp)  # base.html:29
+     45      else: _tmp = _utf8(str(_tmp))  # base.html:29
+     46      _tmp = _utf8(xhtml_escape(_tmp))  # base.html:29
+     47      _append(_tmp)  # base.html:29
+     48      _append('">\n<link rel="apple-touch-icon-precomposed" sizes="72x72" href="')  # base.html:30
+     49      _tmp = static_url('apple-touch-icon-72-precomposed.png')  # base.html:30
+     50      if isinstance(_tmp, _string_types): _tmp = _utf8(_tmp)  # base.html:30
+     51      else: _tmp = _utf8(str(_tmp))  # base.html:30
+     52      _tmp = _utf8(xhtml_escape(_tmp))  # base.html:30
+     53      _append(_tmp)  # base.html:30
+     54      _append('">\n<link rel="apple-touch-icon-precomposed" href="')  # base.html:31
+     55      _tmp = static_url('apple-touch-icon-57-precomposed.png')  # base.html:31
+     56      if isinstance(_tmp, _string_types): _tmp = _utf8(_tmp)  # base.html:31
+     57      else: _tmp = _utf8(str(_tmp))  # base.html:31
+     58      _tmp = _utf8(xhtml_escape(_tmp))  # base.html:31
+     59      _append(_tmp)  # base.html:31
+     60      _append('">\n<link rel="stylesheet" href="')  # base.html:32
+     61      _tmp = static_url('css/app.css')  # base.html:32
+     62      if isinstance(_tmp, _string_types): _tmp = _utf8(_tmp)  # base.html:32
+     63      else: _tmp = _utf8(str(_tmp))  # base.html:32
+     64      _tmp = _utf8(xhtml_escape(_tmp))  # base.html:32
+     65      _append(_tmp)  # base.html:32
+     66      _append('">\n')  # base.html:33
+     67      _append('\n<style type="text/css">\n</style>\n')  # helloworld/index.html:7 (via base.html:33)
+     68      _append('\n<script src="')  # base.html:35
+     69      _tmp = static_url('js/vendor/modernizr-2.6.2.min.js')  # base.html:35
+     70      if isinstance(_tmp, _string_types): _tmp = _utf8(_tmp)  # base.html:35
+     71      else: _tmp = _utf8(str(_tmp))  # base.html:35
+     72      _tmp = _utf8(xhtml_escape(_tmp))  # base.html:35
+     73      _append(_tmp)  # base.html:35
+     74      _append('"></script>\n<script type="text/javascript">\nvar _gaq = _gaq || [];\n_gaq.push([\'_setAccount\', \'UA-XXXXX-X\']);\n_gaq.push([\'_setDomainName\', \'.example.com\']);\n_gaq.push([\'_setAllowLinker\', true]);\n_gaq.push([\'_setAllowHash\', false]);\n_gaq.push([\'_trackPageview\']);\n_gaq.push([\'_trackPageLoadTime\']);\n//_gaq.push([\'_trackEvent\', \'Dashboard\', \'Like\', \'Post: 22004488318\']);\n</script>\n</head>\n<body>\n<!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->\n<div class="navbar navbar-fixed-top">\n<div class="navbar-inner">\n<div class="container">\n<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">\n<span class="icon-bar"></span>\n<span class="icon-bar"></span>\n<span class="icon-bar"></span>\n</a>\n<a class="brand" href="#">Project name</a>\n<div class="nav-collapse">\n<ul class="nav">\n<li class="active"><a href="#">Home</a></li>\n<li><a href="#about">About</a></li>\n<li><a href="#contact">Contact</a></li>\n</ul>\n</div><!--/.nav-collapse -->\n</div>\n</div>\n</div>\n<div class="container">\n<div id="main">\n')  # base.html:73
+     75      _append('\n<!-- Main hero unit for a primary marketing message or call to action -->\n<div class="hero-unit">\n<h1>Hello, world!</h1>\n<p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>\n<p><a class="btn btn-primary btn-large">Learn more &raquo;</a></p>\n</div>\n<!-- Example row of columns -->\n<div class="row">\n<div class="span4">\n<h2>Heading</h2>\n<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>\n<p><a class="btn" href="#">View details &raquo;</a></p>\n</div>\n<div class="span4">\n<h2>Heading</h2>\n<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>\n<p><a class="btn" href="#">View details &raquo;</a></p>\n</div>\n<div class="span4">\n<h2>Heading</h2>\n<p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>\n<p><a class="btn" href="#">View details &raquo;</a></p>\n</div>\n</div>\n')  # helloworld/index.html:35 (via base.html:73)
+     76      _append('\n</div>\n<hr>\n<footer>\n<p>&copy; Company 2012</p>\n</footer>\n</div> <!-- /container -->\n<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>\n<script>window.jQuery || document.write(\'<script src="')  # base.html:86
+     77      _tmp = static_url('js/vendor/jquery-1.9.0.min.js')  # base.html:86
+     78      if isinstance(_tmp, _string_types): _tmp = _utf8(_tmp)  # base.html:86
+     79      else: _tmp = _utf8(str(_tmp))  # base.html:86
+     80      _tmp = _utf8(xhtml_escape(_tmp))  # base.html:86
+     81      _append(_tmp)  # base.html:86
+     82      _append('"><\\/script>\')</script>\n<script src="')  # base.html:87
+     83      _tmp = static_url('js/vendor/bootstrap.min.js')  # base.html:87
+     84      if isinstance(_tmp, _string_types): _tmp = _utf8(_tmp)  # base.html:87
+     85      else: _tmp = _utf8(str(_tmp))  # base.html:87
+     86      _tmp = _utf8(xhtml_escape(_tmp))  # base.html:87
+     87      _append(_tmp)  # base.html:87
+     88      _append('"></script>\n<script src="')  # base.html:88
+     89      _tmp = static_url('js/plugins.js')  # base.html:88
+     90      if isinstance(_tmp, _string_types): _tmp = _utf8(_tmp)  # base.html:88
+     91      else: _tmp = _utf8(str(_tmp))  # base.html:88
+     92      _tmp = _utf8(xhtml_escape(_tmp))  # base.html:88
+     93      _append(_tmp)  # base.html:88
+     94      _append('"></script>\n<script src="')  # base.html:89
+     95      _tmp = static_url('js/main.js')  # base.html:89
+     96      if isinstance(_tmp, _string_types): _tmp = _utf8(_tmp)  # base.html:89
+     97      else: _tmp = _utf8(str(_tmp))  # base.html:89
+     98      _tmp = _utf8(xhtml_escape(_tmp))  # base.html:89
+     99      _append(_tmp)  # base.html:89
+    100      _append('"></script>\n')  # base.html:90
+    101      _append('\n')  # helloworld/index.html:39 (via base.html:90)
+    102      _append("\n<script>\n(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];\ng.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';\ns.parentNode.insertBefore(g,s)}(document,'script'));\n</script>\n</body>\n</html>")  # base.html:98
+    103      return _utf8('').join(_buffer)  # base.html:0
+[2013-04-13 13:21:16 ERROR roo.plugin:176] NameError("global name 'config' is not defined",) on /helloworld/index TRACEBACK:
+    Traceback (most recent call last):
+      File "G:\Python27\lib\site-packages\roo-0.1-py2.7.egg\roo\controller.py", line 160, in _execute
+        self._execute_method(*self.path_args, **self.path_kwargs)
+      File "G:\Python27\lib\site-packages\roo-0.1-py2.7.egg\roo\controller.py", line 186, in _execute_method
+        func(*args, **kwargs)
+      File "D:\Projects\Tink\Roo\sample\app\controllers\helloworld.py", line 15, in index
+        self.xrender()
+      File "G:\Python27\lib\site-packages\roo-0.1-py2.7.egg\roo\controller.py", line 72, in xrender
+        return tornado.web.RequestHandler.render(self, template_name, **kwargs)
+      File "G:\Python27\lib\site-packages\tornado\web.py", line 500, in render
+        html = self.render_string(template_name, **kwargs)
+      File "G:\Python27\lib\site-packages\tornado\web.py", line 607, in render_string
+        return t.generate(**namespace)
+      File "G:\Python27\lib\site-packages\tornado\template.py", line 261, in generate
+        return execute()
+      File "helloworld/index_html.generated.py", line 6, in _execute
+        _tmp = config.site.title  # base.html:9 (via base.html:9)
+    NameError: global name 'config' is not defined
+    
+    REQUEST ARGUMENTS:
+    {}
+    
+    COOKIES:
+      _sess: None
+    
+    REQUEST:
+      full_url: 'http://localhost:8000/helloworld/index'
+      protocol: 'http'
+      query: ''
+      remote_ip: '::1'
+      request_time: 0.01900005340576172
+      uri: '/helloworld/index'
+      version: 'HTTP/1.1'
+    
+    HEADERS:
+    {'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+     'Accept-Encoding': 'gzip, deflate',
+     'Accept-Language': 'en-US,en;q=0.5',
+     'Connection': 'keep-alive',
+     'Cookie': '_sess=96c35606c8b14e2387bf76f073d6b7f2',
+     'Host': 'localhost:8000',
+     'If-None-Match': '"714f35c70537ed69de20a8407e383b49a87c8581"',
+     'User-Agent': 'Mozilla/5.0 (Windows NT 6.2; WOW64; rv:20.0) Gecko/20100101 Firefox/20.0'}
+    
+[2013-04-13 13:21:16 ERROR root:1085] Uncaught exception GET /helloworld/index (::1)
+    HTTPRequest(protocol='http', host='localhost:8000', method='GET', uri='/helloworld/index', version='HTTP/1.1', remote_ip='::1', body='', headers={'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Host': 'localhost:8000', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (Windows NT 6.2; WOW64; rv:20.0) Gecko/20100101 Firefox/20.0', 'Connection': 'keep-alive', 'Cookie': '_sess=96c35606c8b14e2387bf76f073d6b7f2', 'If-None-Match': '"714f35c70537ed69de20a8407e383b49a87c8581"'})
+    Traceback (most recent call last):
+      File "G:\Python27\lib\site-packages\roo-0.1-py2.7.egg\roo\controller.py", line 160, in _execute
+        self._execute_method(*self.path_args, **self.path_kwargs)
+      File "G:\Python27\lib\site-packages\roo-0.1-py2.7.egg\roo\controller.py", line 186, in _execute_method
+        func(*args, **kwargs)
+      File "D:\Projects\Tink\Roo\sample\app\controllers\helloworld.py", line 15, in index
+        self.xrender()
+      File "G:\Python27\lib\site-packages\roo-0.1-py2.7.egg\roo\controller.py", line 72, in xrender
+        return tornado.web.RequestHandler.render(self, template_name, **kwargs)
+      File "G:\Python27\lib\site-packages\tornado\web.py", line 500, in render
+        html = self.render_string(template_name, **kwargs)
+      File "G:\Python27\lib\site-packages\tornado\web.py", line 607, in render_string
+        return t.generate(**namespace)
+      File "G:\Python27\lib\site-packages\tornado\template.py", line 261, in generate
+        return execute()
+      File "helloworld/index_html.generated.py", line 6, in _execute
+        _tmp = config.site.title  # base.html:9 (via base.html:9)
+    NameError: global name 'config' is not defined
+[2013-04-13 13:21:16 ERROR root:1462] 500 GET /helloworld/index (::1) 22.00ms
+[2013-04-13 13:21:23 INFO root:180] G:\Python27\lib\site-packages\roo-0.1-py2.7.egg\roo\__init__.py modified; restarting server
+[2013-04-13 13:21:23 INFO roo.mvc:78] loading http request handlers
+[2013-04-13 13:21:24 INFO roo.mvc:105] loading plugins
+[2013-04-13 13:21:24 INFO roo.mvc:119] loading plugins, [<Plugin session>, <Plugin error>]
+[2013-04-13 13:21:24 INFO roo.mvc:125] loading ui modeuls
+[2013-04-13 13:21:24 INFO roo.mvc:164] Starting at D:\Projects\Tink\Roo\sample
+[2013-04-13 13:21:27 ERROR root:264] helloworld/index.html code:
+      1  def _execute():  # base.html:0
+      2      _buffer = []  # base.html:0
+      3      _append = _buffer.append  # base.html:0
+      4      _append('<!doctype html>\n<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->\n<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->\n<!--[if IE 8]> <html class="no-js lt-ie9" lang="en"> <![endif]-->\n<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->\n<head>\n<meta charset="utf-8">\n<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">\n')  # base.html:9
+      5      _append('<title>')  # base.html:9 (via base.html:9)
+      6      _tmp = config.site.title  # base.html:9 (via base.html:9)
+      7      if isinstance(_tmp, _string_types): _tmp = _utf8(_tmp)  # base.html:9 (via base.html:9)
+      8      else: _tmp = _utf8(str(_tmp))  # base.html:9 (via base.html:9)
+      9      _tmp = _utf8(xhtml_escape(_tmp))  # base.html:9 (via base.html:9)
+     10      _append(_tmp)  # base.html:9 (via base.html:9)
+     11      _append('</title>')  # base.html:9 (via base.html:9)
+     12      _append('\n<meta name="description" content="')  # base.html:10
+     13      _tmp = config.site.description  # base.html:10
+     14      if isinstance(_tmp, _string_types): _tmp = _utf8(_tmp)  # base.html:10
+     15      else: _tmp = _utf8(str(_tmp))  # base.html:10
+     16      _tmp = _utf8(xhtml_escape(_tmp))  # base.html:10
+     17      _append(_tmp)  # base.html:10
+     18      _append('">\n<meta name="author" content="">\n<meta name="viewport" content="width=device-width">\n<meta property="wb:webmaster" content="0c4ecf5405017039" />\n<link rel="shortcut icon" type="image/png" href="')  # base.html:14
+     19      _tmp = static_url('favicon.ico')  # base.html:14
+     20      if isinstance(_tmp, _string_types): _tmp = _utf8(_tmp)  # base.html:14
+     21      else: _tmp = _utf8(str(_tmp))  # base.html:14
+     22      _tmp = _utf8(xhtml_escape(_tmp))  # base.html:14
+     23      _append(_tmp)  # base.html:14
+     24      _append('">\n<link rel="stylesheet" href="')  # base.html:15
+     25      _tmp = static_url('css/bootstrap.min.css')  # base.html:15
+     26      if isinstance(_tmp, _string_types): _tmp = _utf8(_tmp)  # base.html:15
+     27      else: _tmp = _utf8(str(_tmp))  # base.html:15
+     28      _tmp = _utf8(xhtml_escape(_tmp))  # base.html:15
+     29      _append(_tmp)  # base.html:15
+     30      _append('">\n<style>\nbody {\npadding-top: 60px;\npadding-bottom: 40px;\n}\n</style>\n<link rel="stylesheet" href="')  # base.html:22
+     31      _tmp = static_url('css/bootstrap-responsive.min.css')  # base.html:22
+     32      if isinstance(_tmp, _string_types): _tmp = _utf8(_tmp)  # base.html:22
+     33      else: _tmp = _utf8(str(_tmp))  # base.html:22
+     34      _tmp = _utf8(xhtml_escape(_tmp))  # base.html:22
+     35      _append(_tmp)  # base.html:22
+     36      _append('">\n<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->\n<!--[if lt IE 9]>\n<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>\n<![endif]-->\n<!-- Le fav and touch icons -->\n<link rel="apple-touch-icon-precomposed" sizes="144x144" href="')  # base.html:28
+     37      _tmp = static_url('apple-touch-icon-144-precomposed.png')  # base.html:28
+     38      if isinstance(_tmp, _string_types): _tmp = _utf8(_tmp)  # base.html:28
+     39      else: _tmp = _utf8(str(_tmp))  # base.html:28
+     40      _tmp = _utf8(xhtml_escape(_tmp))  # base.html:28
+     41      _append(_tmp)  # base.html:28
+     42      _append('">\n<link rel="apple-touch-icon-precomposed" sizes="114x114" href="')  # base.html:29
+     43      _tmp = static_url('apple-touch-icon-114-precomposed.png')  # base.html:29
+     44      if isinstance(_tmp, _string_types): _tmp = _utf8(_tmp)  # base.html:29
+     45      else: _tmp = _utf8(str(_tmp))  # base.html:29
+     46      _tmp = _utf8(xhtml_escape(_tmp))  # base.html:29
+     47      _append(_tmp)  # base.html:29
+     48      _append('">\n<link rel="apple-touch-icon-precomposed" sizes="72x72" href="')  # base.html:30
+     49      _tmp = static_url('apple-touch-icon-72-precomposed.png')  # base.html:30
+     50      if isinstance(_tmp, _string_types): _tmp = _utf8(_tmp)  # base.html:30
+     51      else: _tmp = _utf8(str(_tmp))  # base.html:30
+     52      _tmp = _utf8(xhtml_escape(_tmp))  # base.html:30
+     53      _append(_tmp)  # base.html:30
+     54      _append('">\n<link rel="apple-touch-icon-precomposed" href="')  # base.html:31
+     55      _tmp = static_url('apple-touch-icon-57-precomposed.png')  # base.html:31
+     56      if isinstance(_tmp, _string_types): _tmp = _utf8(_tmp)  # base.html:31
+     57      else: _tmp = _utf8(str(_tmp))  # base.html:31
+     58      _tmp = _utf8(xhtml_escape(_tmp))  # base.html:31
+     59      _append(_tmp)  # base.html:31
+     60      _append('">\n<link rel="stylesheet" href="')  # base.html:32
+     61      _tmp = static_url('css/app.css')  # base.html:32
+     62      if isinstance(_tmp, _string_types): _tmp = _utf8(_tmp)  # base.html:32
+     63      else: _tmp = _utf8(str(_tmp))  # base.html:32
+     64      _tmp = _utf8(xhtml_escape(_tmp))  # base.html:32
+     65      _append(_tmp)  # base.html:32
+     66      _append('">\n')  # base.html:33
+     67      _append('\n<style type="text/css">\n</style>\n')  # helloworld/index.html:7 (via base.html:33)
+     68      _append('\n<script src="')  # base.html:35
+     69      _tmp = static_url('js/vendor/modernizr-2.6.2.min.js')  # base.html:35
+     70      if isinstance(_tmp, _string_types): _tmp = _utf8(_tmp)  # base.html:35
+     71      else: _tmp = _utf8(str(_tmp))  # base.html:35
+     72      _tmp = _utf8(xhtml_escape(_tmp))  # base.html:35
+     73      _append(_tmp)  # base.html:35
+     74      _append('"></script>\n<script type="text/javascript">\nvar _gaq = _gaq || [];\n_gaq.push([\'_setAccount\', \'UA-XXXXX-X\']);\n_gaq.push([\'_setDomainName\', \'.example.com\']);\n_gaq.push([\'_setAllowLinker\', true]);\n_gaq.push([\'_setAllowHash\', false]);\n_gaq.push([\'_trackPageview\']);\n_gaq.push([\'_trackPageLoadTime\']);\n//_gaq.push([\'_trackEvent\', \'Dashboard\', \'Like\', \'Post: 22004488318\']);\n</script>\n</head>\n<body>\n<!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->\n<div class="navbar navbar-fixed-top">\n<div class="navbar-inner">\n<div class="container">\n<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">\n<span class="icon-bar"></span>\n<span class="icon-bar"></span>\n<span class="icon-bar"></span>\n</a>\n<a class="brand" href="#">Project name</a>\n<div class="nav-collapse">\n<ul class="nav">\n<li class="active"><a href="#">Home</a></li>\n<li><a href="#about">About</a></li>\n<li><a href="#contact">Contact</a></li>\n</ul>\n</div><!--/.nav-collapse -->\n</div>\n</div>\n</div>\n<div class="container">\n<div id="main">\n')  # base.html:73
+     75      _append('\n<!-- Main hero unit for a primary marketing message or call to action -->\n<div class="hero-unit">\n<h1>Hello, world!</h1>\n<p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>\n<p><a class="btn btn-primary btn-large">Learn more &raquo;</a></p>\n</div>\n<!-- Example row of columns -->\n<div class="row">\n<div class="span4">\n<h2>Heading</h2>\n<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>\n<p><a class="btn" href="#">View details &raquo;</a></p>\n</div>\n<div class="span4">\n<h2>Heading</h2>\n<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>\n<p><a class="btn" href="#">View details &raquo;</a></p>\n</div>\n<div class="span4">\n<h2>Heading</h2>\n<p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>\n<p><a class="btn" href="#">View details &raquo;</a></p>\n</div>\n</div>\n')  # helloworld/index.html:35 (via base.html:73)
+     76      _append('\n</div>\n<hr>\n<footer>\n<p>&copy; Company 2012</p>\n</footer>\n</div> <!-- /container -->\n<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>\n<script>window.jQuery || document.write(\'<script src="')  # base.html:86
+     77      _tmp = static_url('js/vendor/jquery-1.9.0.min.js')  # base.html:86
+     78      if isinstance(_tmp, _string_types): _tmp = _utf8(_tmp)  # base.html:86
+     79      else: _tmp = _utf8(str(_tmp))  # base.html:86
+     80      _tmp = _utf8(xhtml_escape(_tmp))  # base.html:86
+     81      _append(_tmp)  # base.html:86
+     82      _append('"><\\/script>\')</script>\n<script src="')  # base.html:87
+     83      _tmp = static_url('js/vendor/bootstrap.min.js')  # base.html:87
+     84      if isinstance(_tmp, _string_types): _tmp = _utf8(_tmp)  # base.html:87
+     85      else: _tmp = _utf8(str(_tmp))  # base.html:87
+     86      _tmp = _utf8(xhtml_escape(_tmp))  # base.html:87
+     87      _append(_tmp)  # base.html:87
+     88      _append('"></script>\n<script src="')  # base.html:88
+     89      _tmp = static_url('js/plugins.js')  # base.html:88
+     90      if isinstance(_tmp, _string_types): _tmp = _utf8(_tmp)  # base.html:88
+     91      else: _tmp = _utf8(str(_tmp))  # base.html:88
+     92      _tmp = _utf8(xhtml_escape(_tmp))  # base.html:88
+     93      _append(_tmp)  # base.html:88
+     94      _append('"></script>\n<script src="')  # base.html:89
+     95      _tmp = static_url('js/main.js')  # base.html:89
+     96      if isinstance(_tmp, _string_types): _tmp = _utf8(_tmp)  # base.html:89
+     97      else: _tmp = _utf8(str(_tmp))  # base.html:89
+     98      _tmp = _utf8(xhtml_escape(_tmp))  # base.html:89
+     99      _append(_tmp)  # base.html:89
+    100      _append('"></script>\n')  # base.html:90
+    101      _append('\n')  # helloworld/index.html:39 (via base.html:90)
+    102      _append("\n<script>\n(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];\ng.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';\ns.parentNode.insertBefore(g,s)}(document,'script'));\n</script>\n</body>\n</html>")  # base.html:98
+    103      return _utf8('').join(_buffer)  # base.html:0
+[2013-04-13 13:21:27 ERROR roo.plugin:176] NameError("global name 'config' is not defined",) on /helloworld/index TRACEBACK:
+    Traceback (most recent call last):
+      File "G:\Python27\lib\site-packages\roo-0.1-py2.7.egg\roo\controller.py", line 161, in _execute
+        self._execute_method(*self.path_args, **self.path_kwargs)
+      File "G:\Python27\lib\site-packages\roo-0.1-py2.7.egg\roo\controller.py", line 187, in _execute_method
+        func(*args, **kwargs)
+      File "D:\Projects\Tink\Roo\sample\app\controllers\helloworld.py", line 15, in index
+        self.xrender()
+      File "G:\Python27\lib\site-packages\roo-0.1-py2.7.egg\roo\controller.py", line 73, in xrender
+        return tornado.web.RequestHandler.render(self, template_name, **kwargs)
+      File "G:\Python27\lib\site-packages\tornado\web.py", line 500, in render
+        html = self.render_string(template_name, **kwargs)
+      File "G:\Python27\lib\site-packages\tornado\web.py", line 607, in render_string
+        return t.generate(**namespace)
+      File "G:\Python27\lib\site-packages\tornado\template.py", line 261, in generate
+        return execute()
+      File "helloworld/index_html.generated.py", line 6, in _execute
+        _tmp = config.site.title  # base.html:9 (via base.html:9)
+    NameError: global name 'config' is not defined
+    
+    REQUEST ARGUMENTS:
+    {}
+    
+    COOKIES:
+      _sess: None
+    
+    REQUEST:
+      full_url: 'http://localhost:8000/helloworld/index'
+      protocol: 'http'
+      query: ''
+      remote_ip: '::1'
+      request_time: 0.018000125885009766
+      uri: '/helloworld/index'
+      version: 'HTTP/1.1'
+    
+    HEADERS:
+    {'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+     'Accept-Encoding': 'gzip, deflate',
+     'Accept-Language': 'en-US,en;q=0.5',
+     'Cache-Control': 'max-age=0',
+     'Connection': 'keep-alive',
+     'Cookie': '_sess=96c35606c8b14e2387bf76f073d6b7f2',
+     'Host': 'localhost:8000',
+     'User-Agent': 'Mozilla/5.0 (Windows NT 6.2; WOW64; rv:20.0) Gecko/20100101 Firefox/20.0'}
+    
+[2013-04-13 13:21:27 ERROR root:1085] Uncaught exception GET /helloworld/index (::1)
+    HTTPRequest(protocol='http', host='localhost:8000', method='GET', uri='/helloworld/index', version='HTTP/1.1', remote_ip='::1', body='', headers={'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Host': 'localhost:8000', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (Windows NT 6.2; WOW64; rv:20.0) Gecko/20100101 Firefox/20.0', 'Connection': 'keep-alive', 'Cookie': '_sess=96c35606c8b14e2387bf76f073d6b7f2', 'Cache-Control': 'max-age=0'})
+    Traceback (most recent call last):
+      File "G:\Python27\lib\site-packages\roo-0.1-py2.7.egg\roo\controller.py", line 161, in _execute
+        self._execute_method(*self.path_args, **self.path_kwargs)
+      File "G:\Python27\lib\site-packages\roo-0.1-py2.7.egg\roo\controller.py", line 187, in _execute_method
+        func(*args, **kwargs)
+      File "D:\Projects\Tink\Roo\sample\app\controllers\helloworld.py", line 15, in index
+        self.xrender()
+      File "G:\Python27\lib\site-packages\roo-0.1-py2.7.egg\roo\controller.py", line 73, in xrender
+        return tornado.web.RequestHandler.render(self, template_name, **kwargs)
+      File "G:\Python27\lib\site-packages\tornado\web.py", line 500, in render
+        html = self.render_string(template_name, **kwargs)
+      File "G:\Python27\lib\site-packages\tornado\web.py", line 607, in render_string
+        return t.generate(**namespace)
+      File "G:\Python27\lib\site-packages\tornado\template.py", line 261, in generate
+        return execute()
+      File "helloworld/index_html.generated.py", line 6, in _execute
+        _tmp = config.site.title  # base.html:9 (via base.html:9)
+    NameError: global name 'config' is not defined
+[2013-04-13 13:21:27 ERROR root:1462] 500 GET /helloworld/index (::1) 21.00ms
+[2013-04-13 13:22:50 ERROR root:1658] Could not open static file 'apple-touch-icon-144-precomposed.png'
+[2013-04-13 13:22:50 ERROR root:1658] Could not open static file 'apple-touch-icon-114-precomposed.png'
+[2013-04-13 13:22:50 ERROR root:1658] Could not open static file 'apple-touch-icon-72-precomposed.png'
+[2013-04-13 13:22:50 ERROR root:1658] Could not open static file 'apple-touch-icon-57-precomposed.png'
+[2013-04-13 13:22:50 INFO root:1462] 200 GET /helloworld/index (::1) 14.00ms
+[2013-04-13 13:22:50 INFO root:1462] 304 GET /static/css/bootstrap.min.css?v=323f5 (::1) 38.00ms
+[2013-04-13 13:22:50 INFO root:1462] 304 GET /static/css/bootstrap-responsive.min.css?v=12d88 (::1) 4.00ms
+[2013-04-13 13:22:50 INFO root:1462] 304 GET /static/css/app.css?v=d41d8 (::1) 1.00ms
+[2013-04-13 13:22:50 INFO root:1462] 304 GET /static/js/vendor/modernizr-2.6.2.min.js?v=42306 (::1) 3.00ms
+[2013-04-13 13:22:50 INFO root:1462] 304 GET /static/js/vendor/bootstrap.min.js?v=2916b (::1) 3.00ms
+[2013-04-13 13:22:50 INFO root:1462] 304 GET /static/js/plugins.js?v=e2679 (::1) 1.00ms
+[2013-04-13 13:22:50 INFO root:1462] 304 GET /static/js/main.js?v=68b32 (::1) 1.00ms
+[2013-04-13 13:23:24 INFO root:180] D:\Projects\Tink\Roo\sample\app\controllers\helloworld.py modified; restarting server
+[2013-04-13 13:23:24 INFO roo.mvc:78] loading http request handlers
+[2013-04-13 13:23:24 INFO roo.mvc:105] loading plugins
+[2013-04-13 13:23:24 INFO roo.mvc:119] loading plugins, [<Plugin session>, <Plugin error>]
+[2013-04-13 13:23:24 INFO roo.mvc:125] loading ui modeuls
+[2013-04-13 13:23:24 INFO roo.mvc:164] Starting at D:\Projects\Tink\Roo\sample
+[2013-04-13 13:23:31 INFO root:1462] 200 GET /helloworld/say (::1) 1.00ms
+[2013-04-13 13:23:33 INFO root:1462] 304 GET /helloworld/say (::1) 1.00ms
+[2013-04-13 13:23:38 INFO root:1462] 304 GET /helloworld/say (::1) 0.00ms
+[2013-04-13 13:24:37 WARNING root:1462] 404 GET /helloworld/ (::1) 3.00ms
+[2013-04-13 13:25:52 ERROR root:1658] Could not open static file 'apple-touch-icon-144-precomposed.png'
+[2013-04-13 13:25:52 ERROR root:1658] Could not open static file 'apple-touch-icon-114-precomposed.png'
+[2013-04-13 13:25:52 ERROR root:1658] Could not open static file 'apple-touch-icon-72-precomposed.png'
+[2013-04-13 13:25:52 ERROR root:1658] Could not open static file 'apple-touch-icon-57-precomposed.png'
+[2013-04-13 13:25:52 INFO root:1462] 304 GET /helloworld/index (::1) 17.00ms
+[2013-04-13 13:29:50 INFO root:180] D:\Projects\Tink\Roo\sample\settings.py modified; restarting server
+[2013-04-13 13:31:50 INFO roo.mvc:78] loading http request handlers
+[2013-04-13 13:31:50 INFO roo.mvc:105] loading plugins
+[2013-04-13 13:31:50 INFO roo.mvc:119] loading plugins, [<Plugin session>, <Plugin error>]
+[2013-04-13 13:31:50 INFO roo.mvc:125] loading ui modeuls
+[2013-04-13 13:31:50 INFO roo.mvc:164] Starting at D:\Projects\Tink\Roo\sample
+[2013-04-13 13:31:54 ERROR root:1658] Could not open static file 'apple-touch-icon-144-precomposed.png'
+[2013-04-13 13:31:54 ERROR root:1658] Could not open static file 'apple-touch-icon-114-precomposed.png'
+[2013-04-13 13:31:54 ERROR root:1658] Could not open static file 'apple-touch-icon-72-precomposed.png'
+[2013-04-13 13:31:54 ERROR root:1658] Could not open static file 'apple-touch-icon-57-precomposed.png'
+[2013-04-13 13:31:54 INFO root:1462] 304 GET /helloworld/index (::1) 17.00ms
+[2013-04-13 13:31:54 INFO root:1462] 304 GET /static/css/bootstrap.min.css?v=323f5 (::1) 37.00ms
+[2013-04-13 13:31:54 INFO root:1462] 304 GET /static/css/bootstrap-responsive.min.css?v=12d88 (::1) 1.00ms
+[2013-04-13 13:31:54 INFO root:1462] 304 GET /static/css/app.css?v=d41d8 (::1) 1.00ms
+[2013-04-13 13:31:54 INFO root:1462] 304 GET /static/js/vendor/modernizr-2.6.2.min.js?v=42306 (::1) 5.00ms
+[2013-04-13 13:31:54 INFO root:1462] 304 GET /static/js/vendor/bootstrap.min.js?v=2916b (::1) 1.00ms
+[2013-04-13 13:31:54 INFO root:1462] 304 GET /static/js/main.js?v=68b32 (::1) 1.00ms
+[2013-04-13 13:31:54 INFO root:1462] 304 GET /static/js/plugins.js?v=e2679 (::1) 1.00ms
+[2013-04-13 21:48:30 INFO root:180] D:\Projects\Tink\Roo\sample\env.py modified; restarting server

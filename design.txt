@@ -1,0 +1,13 @@
+1. ContentType Output
+2. Plugins: Db / Cache / MQ / Auth
+3. Validation / Validator
+4. Interceptor
+5. Router / Route
+6. Settings
+7. Skeleton
+8. Fronend / Backend Application
+
+
+
+/([a-zA-Z]+)/([0-9]+) ==> *args
+/(?P<action>[a-zA-Z]+)/(?P<id>[0-9]+) ==> *kwargs
