@@ -47,7 +47,7 @@ class RedisBaseModel(EntityModel):
 
     @classmethod
     def init(clz, application):
-        EntityModel.init(clz, application)
+        EntityModel.init(application)
         setattr(clz, 'redis', application.redis)
 
     @classmethod

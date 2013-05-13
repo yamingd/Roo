@@ -41,7 +41,7 @@ class CouchbaseModel(EntityModel):
 
     @classmethod
     def init(clz, application):
-        EntityModel.init(clz, application)
+        EntityModel.init(application)
         if clz.bucket_name is None:
             clz.bucket_name = application.settings.couchbase.bucket
         setattr(clz, 'bucket', application.cb[clz.bucket_name])

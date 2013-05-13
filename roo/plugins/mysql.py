@@ -57,7 +57,7 @@ class MySQLModel(EntityModel):
 
     @classmethod
     def init(clz, application):
-        EntityModel.init(clz, application)
+        EntityModel.init(application)
         setattr(clz, 'dbm', application.mysql)
         setattr(clz, 'mc', application.cache)
 
@@ -189,8 +189,8 @@ class MySQLStatModel(MySQLModel, RedisBaseModel):
 
     @classmethod
     def init(clz, application):
-        MySQLModel.init(clz, application)
-        RedisBaseModel.init(clz, application)
+        MySQLModel.init(application)
+        RedisBaseModel.init(application)
 
     @classmethod
     def sync_todb(clz, date=None):

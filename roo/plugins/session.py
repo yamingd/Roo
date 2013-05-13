@@ -48,8 +48,9 @@ class SessionPlugin(BasePlugin):
         userid = controller.get_secure_cookie(cookie_id)
         user = None
         if userid:
-            auth_service = self.session_config.auth_service
-            auth_service = getattr(self.application.models, auth_service)
+            sname = self.session_config.auth_service
+            logger.info(self.application.models)
+            auth_service = self.application.models[sname]
             user = auth_service.auth(userid)
             if user:
                 if not session_id:

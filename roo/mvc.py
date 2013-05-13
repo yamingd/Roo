@@ -77,9 +77,9 @@ class RooApplication(tornado.web.Application):
         """
         prepare running enviro
         """
+        self._load_plugins()
         self._load_handlers()
         self._load_models()
-        self._load_plugins()
         self._load_uimodules()
 
     def _load_handlers(self):
@@ -96,6 +96,7 @@ class RooApplication(tornado.web.Application):
                     route.add(thing)
             except TypeError:
                 # most likely a builtin class or something
+                logger.exception('unexpected error')
                 pass
         self.handlers = route.get_routes()
 
@@ -117,7 +118,9 @@ class RooApplication(tornado.web.Application):
                     self.models[name] = thing
             except TypeError:
                 # most likely a builtin class or something
+                logger.exception('unexpected error')
                 pass
+        logger.info(self.models)
 
     def _load_plugins(self):
         """
@@ -158,6 +161,7 @@ class RooApplication(tornado.web.Application):
             ui_modules = _ui_modules.ui_modules
         except AttributeError:
             # this app simply doesn't have a ui_modules.py file
+            logger.exception('unexpected error')
             return
 
         for name in [x for x in dir(ui_modules) if re.findall('[A-Z]\w+', x)]:
@@ -168,6 +172,7 @@ class RooApplication(tornado.web.Application):
                     self.ui_modules_map[name] = thing
             except TypeError:
                 # most likely a builtin class or something
+                logger.exception('unexpected error')
                 pass
 
     def start(self):

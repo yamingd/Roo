@@ -41,8 +41,8 @@ class Person(BaseModel):
 
     @classmethod
     def auth(clz, id):
-        shard = clz.dbm().find(long(id))
-        clz.dbm().setdb(shard[0])
+        shard = clz.dbm.find(long(id))
+        clz.dbm.setdb(shard[0])
         return clz.find(id)
 
 

@@ -57,22 +57,8 @@ class Route(object):
     def add(self, handler):
         if getattr(handler, '_url', None):
             return
-        ns = handler.__module__.lower()
-        ns = ns.replace('app.controllers.', '')
-        ns = ns.split('.')[0:-1]
-        clzz = handler.__name__.replace(
-            'Handler', '').replace('Controller', '')
-        path = []
-        path.extend(ns)
-        for c in clzz:
-            if c >= 'A' and c <= 'Z':
-                path.append('/')
-                path.append(c)
-            else:
-                path.append(c)
-        path = ''.join(path).lower()
-        if not path.startswith('/'):
-            path = '/' + path
+        path = handler._route_url()
+        setattr(handler, '_uri', path)
         self._routes.append(tornado.web.url(
             path, handler, name=handler.__name__))
 
