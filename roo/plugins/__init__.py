@@ -19,3 +19,8 @@ from redis0 import RedisPlugin
 from memcache import MemcachePlugin
 
 from mysql import MySQLPlugin
+
+try:
+    from cb import CouchbasePlugin
+except ImportError:
+	pass

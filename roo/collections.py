@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from roo.lib import jsonfy
 
 
 class RowSet(object):
@@ -58,6 +59,18 @@ class RowSet(object):
             return self._litem(wid)
         return None
 
+    def as_json(self, fmap=None):
+        m = {}
+        m['total'] = self.total
+        items = []
+        for id in self.items:
+            item = self._litem(id)
+            if fmap:
+                item = fmap(item)
+            items.append(item)
+        m['items'] = items
+        return jsonfy.dumps(m)
+
 
 class RankSet(object):
 
@@ -107,3 +120,39 @@ class RankSet(object):
             item = self.items.pop()
             return self._litem(item)
         return None
+
+
+class StatCollection(object):
+
+    def __init__(self, result):
+        self.total_rows = result.total_rows
+        self.rows = []
+        for item in result:
+            self.rows.append(StatItem(item))
+        if self.total_rows == 1 and len(self.rows) > 1:
+            self.total_rows = len(self.rows)
+
+    def __getitem__(self, index):
+        if index < 0 or index >= len(self.rows):
+            raise Exception(
+                "index is out of range, min=0, max=" + str(len(self.rows)))
+        return self.rows[index]
+
+    def next(self):
+        try:
+            return self.rows.pop(0)
+        except IndexError:
+            raise StopIteration
+
+
+class StatItem(object):
+
+    def __init__(self, item):
+        self.key = item.key
+        self.stat = item.value
+
+    def __getattr__(self, key):
+        try:
+            return self.stat[key]
+        except:
+            return 0

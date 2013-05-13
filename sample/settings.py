@@ -86,4 +86,4 @@ amqp = {
 }
 amqp = ODict(amqp)
 
-plugins = ["mail", "cache", "redis", "mysql", "amqp"]
+plugins = ["mail", "cache", "redis", "mysql"]

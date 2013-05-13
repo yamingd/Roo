@@ -5,7 +5,21 @@ logger = log.logger(__name__)
 from datetime import datetime
 from roo.router import route
 
-from base import BaseController
+from .base import BaseController
+
+
+class AccountIndex(BaseController):
+
+    def get(self):
+        self.write(self.__class__.__module__ +
+                   ':' + self.__class__.__name__ )
+
+
+class AccontSave(BaseController):
+
+    def post(self):
+        self.write(self.__class__.__module__ +
+                   ':' + self.__name__ + ':' + self.__module__)
 
 
 @route('/person/(?P<action>[a-zA-Z]+)')

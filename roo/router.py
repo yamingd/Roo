@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 import tornado.web
 
+import roo.log
+logger = roo.log.logger(__name__)
+
 
 class Route(object):
 
@@ -42,12 +45,36 @@ class Route(object):
     def __call__(self, _handler):
         """gets called when we class decorate"""
         name = self.name and self.name or _handler.__name__
+        setattr(_handler, '_uri', self._uri)
         self._routes.append(tornado.web.url(self._uri, _handler, name=name))
         return _handler
 
     @classmethod
     def get_routes(self):
         return self._routes
+
+    @classmethod
+    def add(self, handler):
+        if getattr(handler, '_url', None):
+            return
+        ns = handler.__module__.lower()
+        ns = ns.replace('app.controllers.', '')
+        ns = ns.split('.')[0:-1]
+        clzz = handler.__name__.replace(
+            'Handler', '').replace('Controller', '')
+        path = []
+        path.extend(ns)
+        for c in clzz:
+            if c >= 'A' and c <= 'Z':
+                path.append('/')
+                path.append(c)
+            else:
+                path.append(c)
+        path = ''.join(path).lower()
+        if not path.startswith('/'):
+            path = '/' + path
+        self._routes.append(tornado.web.url(
+            path, handler, name=handler.__name__))
 
 
 def route_redirect(from_, to, name=None):

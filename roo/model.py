@@ -36,14 +36,9 @@ class EntityModel(ODict):
     """
 
     @classmethod
-    def app(clz):
-        return getattr(clz, '__application__', None)
-
-    @classmethod
-    def models(clz):
-        if clz.app():
-            return clz.app().models
-        return None
+    def init(clz, application):
+        setattr(clz, 'app', application)
+        setattr(clz, 'models', application.models)
 
     @classmethod
     def find(clz, id, time=86400, update=False):
@@ -78,8 +73,10 @@ class EntityModel(ODict):
 
     @classmethod
     def from_json(clz, json_str):
-        map = jsonfy.loads(json_str)
-        return clz(map)
+        m = jsonfy.loads(json_str)
+        if isinstance(m, dict):
+            return clz(m)
+        return m
 
 
 def gen_cache_key(clzz_name, args, prefix=''):
@@ -116,7 +113,7 @@ def prstat(model_clzz_name):
             if not hasattr(_self, '_stat'):
                 _clzz = _self.__class__
                 print _self, _clzz
-                _clzz = getattr(_clzz.models(), model_clzz_name)
+                _clzz = getattr(_clzz.models, model_clzz_name)
                 _self._stat = _clzz.find(getattr(_self, 'id'))
             return _self._stat
         return wrapper
@@ -134,7 +131,7 @@ def prref(model_clzz_name, prop_name):
             _name = '_o_' + prop_name
             if not hasattr(_self, _name):
                 _clzz = _self.__class__
-                _clzz = getattr(_clzz.models(), model_clzz_name)
+                _clzz = getattr(_clzz.models, model_clzz_name)
                 _ob = _clzz.find(getattr(_self, prop_name))
                 setattr(_self, _name, _ob)
             return getattr(_self, _name)
@@ -155,8 +152,8 @@ def lrange(model_clazz_name, lrange_key):
             _name = '_lr_' + model_clazz_name.lower()
             if not hasattr(_self, _name):
                 _clzz = _self.__class__
-                _clzz = getattr(_clzz.models(), model_clazz_name)
-                r = _clzz.app().redis
+                _clzz = getattr(_clzz.models, model_clazz_name)
+                r = _clzz.app.redis
                 key = lrange_key % _self.id
                 start = (pi - 1) * ps
                 items = r.lrange(key, start, start + ps - 1)
@@ -181,8 +178,8 @@ def zrange(model_clazz_name, field_name, zrange_key):
             _name = '_zr_' + field_name
             if not hasattr(_self, _name):
                 _clzz = _self.__class__
-                _clzz = getattr(_clzz.models(), model_clazz_name)
-                r = _clzz.app().redis
+                _clzz = getattr(_clzz.models, model_clazz_name)
+                r = _clzz.app.redis
                 start = (pi - 1) * ps
                 key = zrange_key % _self.id
                 items = r.zrange(

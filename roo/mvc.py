@@ -87,7 +87,16 @@ class RooApplication(tornado.web.Application):
         scan app/controllers folder to generate handlers and routes
         """
         logger.info("loading http request handlers")
-        __import__('app.controllers', globals(), locals(), ['controllers'], -1)
+        temp = __import__('app.controllers', globals(), locals(), ['controllers'], -1)
+        for name in [x for x in dir(temp) if re.findall('[A-Z]\w+', x)]:
+            thing = getattr(temp, name)
+            logger.info('%s, %s' % (name, thing))
+            try:
+                if issubclass(thing, Controller):
+                    route.add(thing)
+            except TypeError:
+                # most likely a builtin class or something
+                pass
         self.handlers = route.get_routes()
 
     def _load_models(self):
@@ -104,7 +113,7 @@ class RooApplication(tornado.web.Application):
             logger.info('%s, %s' % (name, thing))
             try:
                 if issubclass(thing, EntityModel):
-                    setattr(thing, '__application__', self)
+                    thing.init(self)
                     self.models[name] = thing
             except TypeError:
                 # most likely a builtin class or something

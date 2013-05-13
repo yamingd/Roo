@@ -74,6 +74,7 @@ class Controller(tornado.web.RequestHandler):
 		use this instead of either render or render_string
 		"""
 		template_name = self.get_template_file()
+		logger.debug('xrender: %s' % template_name)
 		return tornado.web.RequestHandler.render(self, template_name, **kwargs)
 	
 	def prepare(self):

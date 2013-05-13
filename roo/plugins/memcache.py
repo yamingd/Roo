@@ -20,12 +20,9 @@ class MemcachePlugin(BasePlugin):
 	def __init__(self, application):
 		BasePlugin.__init__(self, application)
 		self.application = application
-		conf = application.settings.cache
-		if 'pools' not in conf:
-			conf.pools = 5
-		if 'namespace' not in conf:
-			conf.namespace = None
-		self.conf = conf
+		self.conf = application.settings.cache
+		self.conf.setdefault('pools', 5)
+		self.conf.setdefault('namespace', None)
 		self.client = Memcache(self.conf.hosts, num_clients=self.conf.pools, namespace=self.conf.namespace)
 		setattr(application, 'cache', self.client)
 

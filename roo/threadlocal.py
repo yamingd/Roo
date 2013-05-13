@@ -24,6 +24,13 @@ def get_user():
     return get('user', None)
 
 
+def get_userid():
+    u = get_user()
+    if u:
+        return u.id
+    return None
+
+
 def set_user(user):
     set('user', user)
 
@@ -42,7 +49,7 @@ def get_ip():
 
 def set_ip(ip):
     set('ip', ip)
-    
+
 
 def set(key, var):
     setattr(_threadlocals, key, var)
@@ -50,4 +57,3 @@ def set(key, var):
 
 def get(key, default=None):
     return getattr(_threadlocals, key, default)
-

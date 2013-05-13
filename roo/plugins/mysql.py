@@ -9,6 +9,7 @@ from roo import threadlocal, datefy
 from roo.plugin import BasePlugin, plugin
 from roo.mysql import MySQLFarm
 from roo.model import EntityModel, gen_cache_key, NoneResult
+from .redis0 import RedisBaseModel
 
 
 @plugin
@@ -55,24 +56,22 @@ class MySQLPlugin(BasePlugin):
 class MySQLModel(EntityModel):
 
     @classmethod
-    def dbm(clz):
-        return clz.app().mysql
+    def init(clz, application):
+        EntityModel.init(clz, application)
+        setattr(clz, 'dbm', application.mysql)
+        setattr(clz, 'mc', application.cache)
 
     @classmethod
     def dbsess(clz):
-        shardid, _ = clz.dbm().current
+        shardid, _ = clz.dbm.current
         setattr(clz, 'shardid', shardid)
-        return clz.dbm().get(shardid)
-
-    @classmethod
-    def mc(clz):
-        return clz.app().cache
+        return clz.dbm.get(shardid)
 
     @classmethod
     def find(clz, id, time=86400, update=False):
         sql = u'select * from %s where id = %s' % (clz.__res_name__, '%s')
         cache_key = gen_cache_key(clz.__name__, [id])
-        cache = clz.mc()
+        cache = clz.mc
         obj = cache.get(cache_key) if not update else None
         if obj is None:
             obj = clz.dbsess().get(sql, id, clz=clz)
@@ -97,7 +96,7 @@ class MySQLModel(EntityModel):
         query = args[0]
         args = args[1:]
         cache_key = gen_cache_key(clz.__name__, *args, prefix=prefix)
-        cache = clz.mc()
+        cache = clz.mc
         obj = cache.get(cache_key) if not _from_db else None
         if obj is None:
             obj = clz.dbsess().get(query, *args, clz=clz)
@@ -128,7 +127,7 @@ class MySQLModel(EntityModel):
         query = args[0]
         args = args[1:]
         cache_key = gen_cache_key(clz.__name__, args, prefix=prefix)
-        cache = clz.mc()
+        cache = clz.mc
         sets = cache.get(cache_key) if not _from_db else None
         if sets is None:
             sets = clz.dbsess().query(query, *args, clz=clz)
@@ -150,7 +149,7 @@ class MySQLModel(EntityModel):
         sql = args[0]
         params = list(args)
         db0 = clz.dbsess()
-        full_id = clz.dbm().genid(clz.__res_id__)  # id generate
+        full_id = clz.dbm.genid(clz.__res_id__)  # id generate
         params[0] = full_id
         db0.execute(sql, *params)
         logger.debug("create record at server: shard_id=%s, full_id=%s" %
@@ -170,7 +169,7 @@ class MySQLModel(EntityModel):
         update = kwargs.get('update', True)
         if update:
             time = kwargs.get('time', 10)
-            cache = clz.mc()
+            cache = clz.mc
             cache_key = gen_cache_key(clz.__name__, [args[-1]])
             cache.set(cache_key, NoneResult(), time=time)
 
@@ -182,64 +181,31 @@ class MySQLModel(EntityModel):
         vargs = [datetime.now(), args[0]]
         clz.dbsess().execute(sql, *vargs)
         cache_key = gen_cache_key(clz.__name__, args)
-        cache = clz.mc()
+        cache = clz.mc
         cache.set(cache_key, NoneResult(), time=time)
 
 
-class MySQLStatModel(MySQLModel):
-    stat_key = '%s:%s'
+class MySQLStatModel(MySQLModel, RedisBaseModel):
 
     @classmethod
-    def find(clz, id, time=86400, update=False):
-        """
-        读取用户操作统计数字
-        """
-        r = clz.app().redis
-        rkey = clz.stat_key % (clz.__name__.lower(), id)
-        stats = r.hgetall(rkey)
-        if stats is None:
-            stats = {}
-        m = {'id': id}
-        for k in stats:
-            m[k] = int(stats[k])
-        return clz(m)
-
-    @classmethod
-    def incr(clz, *args):
-        """
-        更新操作统计数字
-        incr(id, 'a', 1, 'b', 2, 'c', 3)
-        """
-        id = args[0]
-        args = args[1:]
-        r = clz.app().redis
-        rkey = clz.stat_key % (clz.__name__.lower(), id)
-        for k in xrange(len(args) / 2):
-            r.hincrby(rkey, args[k], int(args[k + 1]))
-        rkey = clz.stat_key % (
-            clz.__name__.lower() + ':ts', datefy.today_str())
-        r.sadd(rkey, id)
-
-    def incrby(self, *args):
-        clz = self.__class__
-        args = list(args)
-        args.insert(0, self.id)
-        clz.incr(*args)
+    def init(clz, application):
+        MySQLModel.init(clz, application)
+        RedisBaseModel.init(clz, application)
 
     @classmethod
     def sync_todb(clz, date=None):
         """
         同步内存更新回数据库.
         """
-        r = clz.app().redis
+        r = clz.redis
         date = date or datefy.yesterday()
-        tsrkey = clz.stat_key % (
+        tsrkey = clz.redis_key % (
             clz.__name__.lower() + ':ts', datefy.format(date))
         rids = r.smembers(tsrkey)
         if rids is None:
             return
         for aid in rids:
-            rkey = clz.stat_key % (clz.__name__.lower(), aid)
+            rkey = clz.redis_key % (clz.__name__.lower(), aid)
             stats = r.hgetall(rkey)
             if stats is None:
                 continue
@@ -263,9 +229,3 @@ class MySQLStatModel(MySQLModel):
                 params.append(aid)
             clz.dbsess().execute(sql, *params)
         r.delete(tsrkey)
-
-    def __getattr__(self, name):
-        try:
-            return self[name]
-        except KeyError:
-            return 0
