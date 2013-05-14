@@ -160,7 +160,6 @@ class RooApplication(tornado.web.Application):
             ui_modules = _ui_modules.ui_modules
         except AttributeError:
             # this app simply doesn't have a ui_modules.py file
-            logger.exception('unexpected error')
             return
 
         for name in [x for x in dir(ui_modules) if re.findall('[A-Z]\w+', x)]:

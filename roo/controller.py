@@ -3,7 +3,8 @@ import roo.log
 logger = roo.log.logger(__name__)
 
 import tornado.web
-from . import threadlocal
+from roo import threadlocal
+from roo.router import route
 
 
 class Controller(tornado.web.RequestHandler):
@@ -33,12 +34,19 @@ class Controller(tornado.web.RequestHandler):
         """
         located by controller, method and output format.
         """
-        folder = self.__class__._route_url()
+        folder, _ = route._url_segs(self.__class__)
+        logger.debug('template file: %s' % folder)
         if folder.startswith('/'):
             folder = folder[1:]
-        tmpl_name = self.action_method.lower()
+        if folder.startswith('/'):
+            folder = folder[1:]
+        tmpl_name = getattr(self, 'action_method', '')
+        if tmpl_name:
+            tmpl_name = '/' + tmpl_name.lower()
+        else:
+            tmpl_name = ''
         format = self.get_req_format()
-        return "%s/%s.%s" % (folder, tmpl_name, format)
+        return "%s%s.%s" % (folder, tmpl_name, format)
 
     @property
     def is_xhr(self):
@@ -191,7 +199,7 @@ class Controller(tornado.web.RequestHandler):
         if 'action' in kwargs:
             method_name = kwargs['action']
             del kwargs['action']
-        self.action_method = method_name
+            self.action_method = method_name
         func = getattr(self, method_name)
         func(*args, **kwargs)
 
