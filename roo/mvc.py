@@ -27,7 +27,7 @@ from roo.router import route
 from roo.plugin import manager as pm
 from roo.model import EntityModel
 from roo.lib.dictfy import ODict
-from roo.controller import Controller
+from roo.controller import Controller, UrlDebug
 
 SHUTDOWN_WAIT = 3
 
@@ -93,12 +93,12 @@ class RooApplication(tornado.web.Application):
             logger.info('%s, %s' % (name, thing))
             try:
                 if issubclass(thing, Controller):
-                    route.add(thing)
+                    pass  # route.add(thing)
             except TypeError:
                 # most likely a builtin class or something
-                logger.exception('unexpected error')
                 pass
         self.handlers = route.get_routes()
+        self.handlers.append(tornado.web.url('/_debug/routes', UrlDebug))
 
     def _load_models(self):
         """
@@ -118,7 +118,6 @@ class RooApplication(tornado.web.Application):
                     self.models[name] = thing
             except TypeError:
                 # most likely a builtin class or something
-                logger.exception('unexpected error')
                 pass
         logger.info(self.models)
 
@@ -172,7 +171,6 @@ class RooApplication(tornado.web.Application):
                     self.ui_modules_map[name] = thing
             except TypeError:
                 # most likely a builtin class or something
-                logger.exception('unexpected error')
                 pass
 
     def start(self):

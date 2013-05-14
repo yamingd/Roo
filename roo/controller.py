@@ -15,26 +15,6 @@ class Controller(tornado.web.RequestHandler):
         self.action_method = None
         tornado.web.RequestHandler.__init__(self, application, request)
 
-    @classmethod
-    def _route_url(clz):
-        ns = clz.__module__.lower()
-        ns = ns.replace('app.controllers.', '')
-        ns = ns.split('.')[0:-1]
-        clzz = clz.__name__.replace(
-            'Handler', '').replace('Controller', '')
-        path = []
-        path.extend(ns)
-        for c in clzz:
-            if c >= 'A' and c <= 'Z':
-                path.append('/')
-                path.append(c)
-            else:
-                path.append(c)
-        path = ''.join(path).lower()
-        if not path.startswith('/'):
-            path = '/' + path
-        return path
-
     def get_req_format(self):
         accept = self.request.headers.get("accept", None)
         if not accept or len(accept) == 0:
@@ -214,3 +194,11 @@ class Controller(tornado.web.RequestHandler):
         self.action_method = method_name
         func = getattr(self, method_name)
         func(*args, **kwargs)
+
+
+class UrlDebug(Controller):
+
+    def get(self):
+        for item in self.application.handlers[0][1]:
+            self.write(str(item))
+            self.write('<br />')

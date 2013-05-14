@@ -44,7 +44,6 @@ distutils.core.setup(
         
     },
     install_requires=[
-        "pyyaml",
         "tornado",
         "jsonlib2",
         "pika",

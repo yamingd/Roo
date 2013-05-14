@@ -16,7 +16,7 @@ class SystemIndex(AdminBaseController):
         self.xrender()
 
 
-@route('/admin/system/solr/(?P<action>[a-zA-Z]+)')
+@route('/system/solr/(?P<action>[a-zA-Z]+)')
 class SystemSolr(AdminBaseController):
 
     def index(self, *args, **kwargs):
