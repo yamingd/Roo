@@ -45,9 +45,12 @@ class CouchbaseModel(EntityModel):
         if clz.bucket_name is None:
             clz.bucket_name = application.settings.couchbase.bucket
         setattr(clz, 'bucket', application.cb[clz.bucket_name])
-        ddocs = clz._ddoc_views()
+        ddocs = getattr(clz, '_ddoc_views', None)
         if ddocs:
-            clz.bucket[clz.get_ddoc_name()] = ddocs
+            ddocs = ddocs()
+            if ddocs:
+                clz.bucket['_design/' + clz.get_ddoc_name()] = ddocs
+                logger.info("create ddoc: %s " % clz.get_ddoc_name())
 
     @classmethod
     def pkid(clz):
@@ -221,10 +224,6 @@ class CouchbaseModel(EntityModel):
         """
         key = u'%s:%s' % (clz.__res_name__, args[0])
         clz.bucket.delete(key)
-
-    @classmethod
-    def _ddoc_views(clz):
-        return None
 
 
 def date_to_array(date):
