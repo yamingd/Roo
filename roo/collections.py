@@ -4,8 +4,8 @@ from roo.lib import jsonfy
 
 class RowSet(object):
 
-    def __init__(self, items, item_clazz, total=0, limit=0, start=1):
-        self.items = map(long, items)
+    def __init__(self, items, item_clazz, total=0, limit=0, start=1, fmap=long):
+        self.items = map(fmap, items) if fmap else items
         self.clzz = item_clazz
         self.total = total
         self.item_func = item_clazz.find
@@ -58,8 +58,8 @@ class RowSet(object):
             wid = self.items.pop()
             return self._litem(wid)
         return None
-
-    def as_json(self, fmap=None):
+    
+    def as_map(self, fmap=None):
         m = {}
         m['total'] = self.total
         items = []
@@ -69,7 +69,10 @@ class RowSet(object):
                 item = fmap(item)
             items.append(item)
         m['items'] = items
-        return jsonfy.dumps(m)
+        return m
+
+    def as_json(self, fmap=None):
+        return jsonfy.dumps(self.as_map(fmap=fmap))
 
 
 class RankSet(object):

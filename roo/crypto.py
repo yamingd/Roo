@@ -50,7 +50,7 @@ def salted_hmac(key_salt, value, secret=None):
     # line is redundant and could be replaced by key = key_salt + secret, since
     # the hmac module does the same thing for keys longer than the block size.
     # However, we need to ensure that we *always* do this.
-    return hmac.new(key, msg=force_bytes(value), digestmod=hashlib.sha1)
+    return hmac.new(key, msg=force_bytes(value), digestmod=hashlib.sha1).hexdigest()
 
 
 def get_random_string(length=12,

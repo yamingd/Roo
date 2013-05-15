@@ -75,7 +75,7 @@ class EntityModel(ODict):
     def from_json(clz, json_str):
         m = jsonfy.loads(json_str)
         if isinstance(m, dict):
-            return clz(m)
+            return clz(**m)
         return m
 
 

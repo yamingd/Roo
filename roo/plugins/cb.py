@@ -59,7 +59,7 @@ class CouchbaseModel(EntityModel):
 
     @classmethod
     def get_ddoc(clz):
-        return clz.bucket[clz.get_ddoc_name()]
+        return clz.bucket['_design/' + clz.get_ddoc_name()]
 
     @classmethod
     def get_ddoc_name(clz):
@@ -77,7 +77,8 @@ class CouchbaseModel(EntityModel):
     def find(clz, id, time=86400, update=False):
         key = u'%s:%s' % (clz.__res_name__, id.__str__())
         json_str = clz.bucket.get(key)
-        return clz.from_json(json_str)
+        logger.debug('find-byid = ' + key + " >> " + str(json_str))
+        return clz.from_json(json_str[2])
 
     @classmethod
     def find_one(clz, *args, **kwargs):
@@ -110,6 +111,7 @@ class CouchbaseModel(EntityModel):
         link:
         http://www.couchbase.com/docs/couchbase-manual-2.0/couchbase-views-writing-querying-selection.html
         """
+        idfmap = kwargs.pop('fmap', long)
         kwargs.setdefault('limit', 20)
         kwargs.setdefault('page', 1)
 
@@ -130,8 +132,9 @@ class CouchbaseModel(EntityModel):
         total = results.total_rows
         itemids = []
         for item in results:
-            itemids.append(item['id'])
-        rs = RowSet(itemids, clz, total=total, limit=limit, start=start)
+            itemids.append(item['id'].split(':')[-1])
+        logger.debug(str(total) + ','.join(itemids))
+        rs = RowSet(itemids, clz, total=total, limit=limit, start=start, fmap=idfmap)
         return rs
 
     @classmethod
@@ -191,7 +194,7 @@ class CouchbaseModel(EntityModel):
         kwargs = {'time':86000 or None}
         """
         o = args[0]
-        if not o.id:
+        if not hasattr(o, 'id') or not o.id:
             o.id = clz.pkid()
         o.doc_type = clz.__res_name__
         if not kwargs:

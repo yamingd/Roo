@@ -2,9 +2,11 @@
 import roo.log
 logger = roo.log.logger(__name__)
 
+from datetime import datetime
 import tornado.web
 from roo import threadlocal
 from roo.router import route
+from roo.collections import RowSet
 
 
 class Controller(tornado.web.RequestHandler):
@@ -14,6 +16,7 @@ class Controller(tornado.web.RequestHandler):
     def __init__(self, application, request, transforms=None):
         self.render_context = {}
         self.action_method = None
+        self.current_date = datetime.now()
         tornado.web.RequestHandler.__init__(self, application, request)
 
     def get_req_format(self):
@@ -40,7 +43,7 @@ class Controller(tornado.web.RequestHandler):
             folder = folder[1:]
         if folder.startswith('/'):
             folder = folder[1:]
-        tmpl_name = getattr(self, 'action_method', '')
+        tmpl_name = self.action_method
         if tmpl_name:
             tmpl_name = '/' + tmpl_name.lower()
         else:
@@ -202,6 +205,20 @@ class Controller(tornado.web.RequestHandler):
             self.action_method = method_name
         func = getattr(self, method_name)
         func(*args, **kwargs)
+
+    def _wrap_data(self, data=[], status=200, msg='', fmap=None):
+        m = {}
+        m['status'] = status
+        m['msg'] = msg
+        if isinstance(data, dict):
+            m['data'] = [data]
+        elif isinstance(data, list):
+            m['data'] = data
+        elif isinstance(data, RowSet):
+            m['data'] = data.as_map(fmap=fmap)
+        else:
+            m['data'] = []
+        return m
 
 
 class UrlDebug(Controller):

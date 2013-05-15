@@ -15,7 +15,7 @@ class Form(object):
         self.errors = {}
         self.c = controller
         self.request = controller.request
-        self.model = model.__class__.__name__.lower()
+        self.model = model.__name__.lower()
 
     def validate(self):
         """
