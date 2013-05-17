@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import roo.log
 logger = roo.log.logger(__name__)
+
+import os
 from datetime import datetime
 from couchbase import Couchbase
 from roo.plugin import BasePlugin, plugin
@@ -31,11 +33,13 @@ class CouchbasePlugin(BasePlugin):
         setattr(application, 'cb', self.client)
         setattr(application, 'cbb', self.get_bucket)
         setattr(application, 'cq', CouchQuery)
+        self.scan_ddoc(os.path.join(application.root, 'ddoc'))
+        logger.info('ddocs:%s, views:%s' % (len(self.ddocs), len(self.views)))
 
     def on_before(self, controller):
         setattr(controller, 'cb', self.client)
         setattr(controller, 'cq', CouchQuery)
-    
+
     def get_bucket(self, name):
         bucket = self.buckets.get(name, None)
         if bucket:
@@ -43,6 +47,54 @@ class CouchbasePlugin(BasePlugin):
         bucket = self.client[name]
         self.buckets[name] = bucket
         return bucket
+
+    def create_ddoc(self, bucket, ddoc_name):
+        view_names = self.ddocs[ddoc_name]
+        doc_id = "_design/%s" % ddoc_name
+        doc_views = {}
+        for view_name in view_names:
+            view_item = self.views[ddoc_name + '/' + view_name]
+            item = {
+                "map": view_item['map']
+            }
+            if view_item['reduce']:
+                item['reduce'] = view_item['reduce']
+            doc_views[view_name] = item
+        bucket[doc_id] = {"views": doc_views}
+
+    def scan_ddoc(self, folder):
+        self.ddocs = {}
+        self.views = {}
+        for cpath, folders, files in os.walk(folder):
+            for ifile in files:
+                if ifile.endswith('.js'):
+                    ifile = os.path.join(cpath, ifile)
+                    with open(ifile) as f:
+                        view_content = f.read()
+                    ifile = ifile.replace(folder, '')
+                    # beer\sample-map.js
+                    ifile = filter(None, ifile.replace('/', '\\').split('\\'))
+                    logger.info(ifile)
+                    ddoc_name = ifile[0]  # beer
+                    view_name, func_name = ifile[-1].replace(
+                        '.js', '').split('-')  # [sample,map]
+                    key = ddoc_name + '/' + view_name
+                    if key not in self.views:
+                        view_item = {
+                            u'ddoc_name': unicode(ddoc_name),
+                            u'view_name': unicode(view_name),
+                            u'map': None,
+                            u'reduce': None
+                        }
+                    else:
+                        view_item = self.views[key]
+                    view_item[func_name] = unicode(view_content)
+                    self.views[key] = view_item
+                    self.ddocs.setdefault(view_item['ddoc_name'], [])
+                    self.ddocs[view_item['ddoc_name']].append(view_name)
+        
+        for name in self.ddocs:
+            logger.info(name)
 
 
 class CouchbaseModel(EntityModel):
@@ -58,19 +110,18 @@ class CouchbaseModel(EntityModel):
             setattr(self, k, kwargs[k])
         self.update_at = datetime.now()
         self.__class__.save(self)
-        
+
     @classmethod
     def init(clz, application):
         EntityModel.init(application)
+        if not hasattr(clz, '__res_name__'):
+            return
         if clz.bucket_name is None:
             clz.bucket_name = application.settings.couchbase.bucket
         setattr(clz, 'bucket', application.cbb(clz.bucket_name))
-        ddocs = getattr(clz, '_ddoc_views', None)
-        if ddocs:
-            ddocs = ddocs()
-            if ddocs:
-                clz.bucket['_design/' + clz.get_ddoc_name()] = ddocs
-                logger.info("create ddoc: %s " % clz.get_ddoc_name())
+        ddoc_name = clz.get_ddoc_name()
+        application.plugins.couchbase.create_ddoc(clz.bucket, ddoc_name)
+        logger.info("create ddoc: %s " % clz.get_ddoc_name())
 
     @classmethod
     def pkid(clz):
@@ -88,7 +139,7 @@ class CouchbaseModel(EntityModel):
         else:
             ddoc_name = clz.__res_name__
         return ddoc_name
-    
+
     @classmethod
     def query(clz):
         return CouchQuery()
@@ -154,7 +205,8 @@ class CouchbaseModel(EntityModel):
         for item in results:
             itemids.append(item['id'].split(':')[-1])
         logger.debug(str(total) + ','.join(itemids))
-        rs = RowSet(itemids, clz, total=total, limit=limit, start=start, fmap=idfmap)
+        rs = RowSet(itemids, clz, total=total,
+                    limit=limit, start=start, fmap=idfmap)
         return rs
 
     @classmethod
