@@ -23,16 +23,26 @@ class CouchbasePlugin(BasePlugin):
 
     def __init__(self, application):
         BasePlugin.__init__(self, application)
+        self.buckets = {}
         self.conf = application.settings.couchbase
         self.conf.setdefault('port', 8091)
         self.client = Couchbase('%s:%s' % (
             self.conf.ip, self.conf.port), username=self.conf.user, password=self.conf.passwd)
         setattr(application, 'cb', self.client)
+        setattr(application, 'cbb', self.get_bucket)
         setattr(application, 'cq', CouchQuery)
 
     def on_before(self, controller):
         setattr(controller, 'cb', self.client)
         setattr(controller, 'cq', CouchQuery)
+    
+    def get_bucket(self, name):
+        bucket = self.buckets.get(name, None)
+        if bucket:
+            return bucket
+        bucket = self.client[name]
+        self.buckets[name] = bucket
+        return bucket
 
 
 class CouchbaseModel(EntityModel):
@@ -54,7 +64,7 @@ class CouchbaseModel(EntityModel):
         EntityModel.init(application)
         if clz.bucket_name is None:
             clz.bucket_name = application.settings.couchbase.bucket
-        setattr(clz, 'bucket', application.cb[clz.bucket_name])
+        setattr(clz, 'bucket', application.cbb(clz.bucket_name))
         ddocs = getattr(clz, '_ddoc_views', None)
         if ddocs:
             ddocs = ddocs()
