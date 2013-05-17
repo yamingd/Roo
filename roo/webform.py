@@ -37,8 +37,6 @@ class Form(object):
                     if not vv.isOK(values):
                         self.errors[keyname] = vv.get_message()
                         break
-        if self.errors:
-            self.errors['status'] = '601'
         return self.errors
 
     def get_models(self):

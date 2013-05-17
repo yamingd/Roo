@@ -120,7 +120,7 @@ def prstat(model_clzz_name):
     return fwrapper
 
 
-def prref(model_clzz_name, prop_name):
+def prref(model_clzz_name, prop_name, idtype=long):
     """
     @prref('User', 'user_id'):
     def user(self): pass
@@ -132,7 +132,12 @@ def prref(model_clzz_name, prop_name):
             if not hasattr(_self, _name):
                 _clzz = _self.__class__
                 _clzz = getattr(_clzz.models, model_clzz_name)
-                _ob = _clzz.find(getattr(_self, prop_name))
+                val = getattr(_self, prop_name)
+                if idtype:
+                    val = idtype(val)
+                if not val or val <= 0:
+                    return _clzz()
+                _ob = _clzz.find(val)
                 setattr(_self, _name, _ob)
             return getattr(_self, _name)
         return wrapper

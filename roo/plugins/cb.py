@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import roo.log
 logger = roo.log.logger(__name__)
-
+from datetime import datetime
 from couchbase import Couchbase
 from roo.plugin import BasePlugin, plugin
 from roo.model import EntityModel
@@ -39,6 +39,16 @@ class CouchbaseModel(EntityModel):
     bucket_name = None
     ddoc_name = None
 
+    def __init__(self, **kwargs):
+        for k in kwargs:
+            setattr(self, k, kwargs[k])
+
+    def update(self, **kwargs):
+        for k in kwargs:
+            setattr(self, k, kwargs[k])
+        self.update_at = datetime.now()
+        self.__class__.save(self)
+        
     @classmethod
     def init(clz, application):
         EntityModel.init(application)
@@ -225,8 +235,15 @@ class CouchbaseModel(EntityModel):
         """
         args[0] = id
         """
-        key = u'%s:%s' % (clz.__res_name__, args[0])
-        clz.bucket.delete(key)
+        flag = kwargs.get('erase', False)
+        if flag:
+            key = u'%s:%s' % (clz.__res_name__, args[0])
+            clz.bucket.delete(key)
+        else:
+            cmt = clz.find(args[0])
+            cmt.if_deleted = 1
+            cmt.delete_at = datetime.now()
+            clz.save(cmt)
 
 
 def date_to_array(date):
