@@ -206,10 +206,11 @@ class Controller(tornado.web.RequestHandler):
         func = getattr(self, method_name)
         func(*args, **kwargs)
 
-    def _wrap_data(self, data=[], status=200, msg='', fmap=None):
+    def _wrap_data(self, data=[], status=200, msg='', total=0, fmap=None):
         m = {}
         m['status'] = status
         m['msg'] = msg
+        m['total'] = total
         if isinstance(data, dict):
             m['data'] = [data]
         elif isinstance(data, list):
@@ -219,6 +220,12 @@ class Controller(tornado.web.RequestHandler):
         else:
             m['data'] = []
         return m
+
+    def write_ok(self, msg='OK', data=[], total=0):
+        self.write(self._wrap_data(status=200, msg=msg, data=data, total=total))
+
+    def write_verror(self, msg='error', errors=[], status=601):
+        self.write(self._wrap_data(status=status, msg=msg, data=errors))
 
 
 class UrlDebug(Controller):
