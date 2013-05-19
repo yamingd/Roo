@@ -38,20 +38,22 @@ class Route(object):
     """
     _routes = []
 
-    def __init__(self, uri, name=None):
+    def __init__(self, uri, name=None, package=True):
         self._uri = uri
         self.name = name
+        self.package = package
 
     def __call__(self, _handler):
         """gets called when we class decorate"""
-        ns = self.__class__._url_namespace(_handler)
-        if not self.name:
-            path, name = self.__class__._url_segs(_handler)
-            self.name = name
-        self._uri = ns + self._uri  # ns looks like a subsite
-        if self._uri.startswith('//'):
-            self._uri = self._uri[1:]
-        logger.debug(self._uri + ';' + ns + ';' + self.name + ';' + str(_handler))
+        if self.package:
+            ns = self.__class__._url_namespace(_handler)
+            if not self.name:
+                path, name = self.__class__._url_segs(_handler)
+                self.name = name
+            self._uri = ns + self._uri  # ns looks like a subsite
+            if self._uri.startswith('//'):
+                self._uri = self._uri[1:]
+            logger.debug(self._uri + ';' + ns + ';' + self.name + ';' + str(_handler))
         setattr(_handler, '_uri', self._uri)
         self._routes.append(tornado.web.url(
             self._uri, _handler, name=self.name))

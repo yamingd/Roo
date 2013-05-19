@@ -8,6 +8,8 @@ from couchbase import Couchbase
 from roo.plugin import BasePlugin, plugin
 from roo.model import EntityModel
 from roo.collections import RowSet, StatCollection
+from roo.controller import Controller
+from roo.router import route
 
 
 @plugin
@@ -92,9 +94,29 @@ class CouchbasePlugin(BasePlugin):
                     self.views[key] = view_item
                     self.ddocs.setdefault(view_item['ddoc_name'], [])
                     self.ddocs[view_item['ddoc_name']].append(view_name)
-        
+
         for name in self.ddocs:
             logger.info(name)
+
+
+@route('/admin/couchbase/ddoc', package=False)
+class DdocController(Controller):
+    require_auth = True
+
+    def get(self):
+        name = self.get_argument('name', None)
+        cbs = self.application.plugins.couchbase
+        cbs.scan_ddoc(os.path.join(self.application.root, 'ddoc'))
+        if name is not None:
+            model = getattr(self.models, name)
+            ddoc_name = model.get_ddoc_name()
+            cbs.create_ddoc(model.bucket, ddoc_name)
+            self.write("create ddoc: %s " % ddoc_name)
+        else:
+            for model in self.models:
+                ddoc_name = model.get_ddoc_name()
+                cbs.create_ddoc(model.bucket, ddoc_name)
+                self.write("create ddoc: %s " % ddoc_name)
 
 
 class CouchbaseModel(EntityModel):
@@ -119,9 +141,10 @@ class CouchbaseModel(EntityModel):
         if clz.bucket_name is None:
             clz.bucket_name = application.settings.couchbase.bucket
         setattr(clz, 'bucket', application.cbb(clz.bucket_name))
-        ddoc_name = clz.get_ddoc_name()
-        application.plugins.couchbase.create_ddoc(clz.bucket, ddoc_name)
-        logger.info("create ddoc: %s " % clz.get_ddoc_name())
+        if application.settings.couchbase.init:
+            ddoc_name = clz.get_ddoc_name()
+            application.plugins.couchbase.create_ddoc(clz.bucket, ddoc_name)
+            logger.info("create ddoc: %s " % clz.get_ddoc_name())
 
     @classmethod
     def pkid(clz):
