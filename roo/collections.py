@@ -127,11 +127,14 @@ class RankSet(object):
 
 class StatCollection(object):
 
-    def __init__(self, result):
-        self.total_rows = result.total_rows
+    def __init__(self, result, item_clazz=None):
+        self.total_rows = 0
+        self.keys = []
         self.rows = []
+        self.item_clazz = item_clazz
         for item in result:
-            self.rows.append(StatItem(item))
+            self.keys.append(item.key)
+            self.rows.append(StatItem(item, item_clazz))
         if self.total_rows == 1 and len(self.rows) > 1:
             self.total_rows = len(self.rows)
 
@@ -150,9 +153,13 @@ class StatCollection(object):
 
 class StatItem(object):
 
-    def __init__(self, item):
+    def __init__(self, item, item_clazz):
+        """
+        item.value would be a dict.
+        """
         self.key = item.key
         self.stat = item.value
+        self.item_clazz = item_clazz
 
     def __getattr__(self, key):
         try:

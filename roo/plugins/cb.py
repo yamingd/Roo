@@ -122,6 +122,8 @@ class DdocController(Controller):
 class CouchbaseModel(EntityModel):
     bucket_name = None
     ddoc_name = None
+    U0FFF = "\u0fff"
+    U0000 = "\u0000"
 
     def __init__(self, **kwargs):
         for k in kwargs:
@@ -185,6 +187,27 @@ class CouchbaseModel(EntityModel):
         return rs.pop()
 
     @classmethod
+    def find_view(clz, *args, **kwargs):
+        kwargs.setdefault('limit', 20)
+        kwargs.setdefault('page', 1)
+
+        limit = kwargs.get('limit', 20)
+        page = kwargs.get('page', 1)
+        start = (page - 1) * limit
+        kwargs['skip'] = start
+        if limit <= 0:
+            kwargs.pop('limit', None)
+            kwargs.pop('skip', None)
+        kwargs.pop('page', None)
+
+        if len(args) >= 2:
+            ddoc = clz.bucket['_design/' + args[1]]
+        else:
+            ddoc = clz.get_ddoc()
+        results = ddoc[args[0]].results(params=kwargs)
+        return results
+
+    @classmethod
     def find_list(clz, *args, **kwargs):
         """
         args: (view_name, ddoc_name)
@@ -206,30 +229,14 @@ class CouchbaseModel(EntityModel):
         http://www.couchbase.com/docs/couchbase-manual-2.0/couchbase-views-writing-querying-selection.html
         """
         idfmap = kwargs.pop('fmap', long)
-        kwargs.setdefault('limit', 20)
-        kwargs.setdefault('page', 1)
-
-        limit = kwargs.get('limit', 20)
-        page = kwargs.get('page', 1)
-        start = (page - 1) * limit
-        kwargs['skip'] = start
-        if limit <= 0:
-            kwargs.pop('limit', None)
-            kwargs.pop('skip', None)
-        kwargs.pop('page', None)
-
-        if len(args) >= 2:
-            ddoc = clz.bucket['_design/' + args[1]]
-        else:
-            ddoc = clz.get_ddoc()
-        results = ddoc[args[0]].results(params=kwargs)
+        results = clz.find_view(*args, **kwargs)
         total = results.total_rows
         itemids = []
         for item in results:
             itemids.append(item['id'].split(':')[-1])
         logger.debug(str(total) + ','.join(itemids))
         rs = RowSet(itemids, clz, total=total,
-                    limit=limit, start=start, fmap=idfmap)
+                    limit=kwargs.get('limit'), start=kwargs.get('start'), fmap=idfmap)
         return rs
 
     @classmethod
@@ -250,28 +257,17 @@ class CouchbaseModel(EntityModel):
             {"key":[2010,11,8],"value":{"beer":1,"brewery":1}},
             ]
         }
+        {"rows":[
+            {"key":["a7b5351eb5ca297d0c6ec7a9b5020ef3","5"],"value":1},
+            {"key":["a7b5351eb5ca297d0c6ec7a9b5020ef3","14"],"value":3}
+            ]
+        }
         link:
         http://www.couchbase.com/docs/couchbase-manual-2.0/couchbase-views-writing-querying-selection.html
         """
-        kwargs.setdefault('limit', 20)
-        kwargs.setdefault('page', 1)
-
-        limit = kwargs.get('limit', 20)
-        page = kwargs.get('page', 1)
-        start = (page - 1) * limit
-        kwargs['skip'] = start
-        if limit <= 0:
-            kwargs.pop('limit', None)
-            kwargs.pop('skip', None)
-        kwargs.pop('page', None)
-
-        if len(args) >= 2:
-            ddoc = clz.bucket['_design/' + args[1]]
-        else:
-            ddoc = clz.get_ddoc()
         kwargs['group'] = True
         kwargs['reduce'] = True
-        results = ddoc[args[0]].results(params=kwargs)
+        results = clz.find_view(*args, **kwargs)
         return StatCollection(results)
 
     @classmethod
