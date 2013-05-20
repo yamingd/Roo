@@ -30,7 +30,7 @@ extensions = []
 major, minor = sys.version_info[:2]
 python_26 = (major > 2 or (major == 2 and minor >= 6))
 
-version = "0.1"
+version = "0.2"
 
 if major >= 3:
     import setuptools  # setuptools is required for use_2to3
@@ -51,7 +51,8 @@ distutils.core.setup(
         "twisted",
         "pylibmc",
         "redis",
-        "beanstalkt"
+        "beanstalkt",
+        "requests"
     ],
     ext_modules = extensions,
     author="yaming_deng",

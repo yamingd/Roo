@@ -205,6 +205,8 @@ class CouchbaseModel(EntityModel):
         else:
             ddoc = clz.get_ddoc()
         results = ddoc[args[0]].results(params=kwargs)
+        if clz.app.debug:
+            logger.debug(results)
         return results
 
     @classmethod
@@ -228,6 +230,8 @@ class CouchbaseModel(EntityModel):
         link:
         http://www.couchbase.com/docs/couchbase-manual-2.0/couchbase-views-writing-querying-selection.html
         """
+        limit = kwargs.get('limit', 20)
+        page = kwargs.get('page', 1)
         idfmap = kwargs.pop('fmap', long)
         results = clz.find_view(*args, **kwargs)
         total = results.total_rows
@@ -236,7 +240,7 @@ class CouchbaseModel(EntityModel):
             itemids.append(item['id'].split(':')[-1])
         logger.debug(str(total) + ','.join(itemids))
         rs = RowSet(itemids, clz, total=total,
-                    limit=kwargs.get('limit'), start=kwargs.get('start'), fmap=idfmap)
+                    limit=limit, start=page, fmap=idfmap)
         return rs
 
     @classmethod
