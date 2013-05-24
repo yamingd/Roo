@@ -4,13 +4,14 @@ from roo.lib import jsonfy
 
 class RowSet(object):
 
-    def __init__(self, items, item_clazz, total=0, limit=0, start=1, fmap=long):
+    def __init__(self, items, item_clazz, total=0, limit=0, start=1, fmap=long, extras={}):
         self.items = map(fmap, items) if fmap else items
         self.clzz = item_clazz
         self.total = total
         self.item_func = item_clazz.find
         self.limit = limit
         self.start = start
+        self.extras = extras
         self._caches = {}
 
     @property
@@ -32,7 +33,12 @@ class RowSet(object):
     def _litem(self, wid):
         if wid in self._caches:
             return self._caches[wid]
-        self._caches[wid] = ret = self.item_func(wid)
+        ret = self.item_func(wid)
+        if wid in self.extras:
+            m = self.extras[wid]
+            for name in m:
+                setattr(ret, name, m[name])
+        self._caches[wid] = ret
         return ret
 
     def __getitem__(self, index):

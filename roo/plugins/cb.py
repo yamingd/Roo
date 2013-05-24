@@ -167,7 +167,7 @@ class CouchbaseModel(EntityModel):
 
     @classmethod
     def query(clz):
-        return CouchQuery()
+        return CouchQuery(clz, clz.bucket)
 
     @classmethod
     def find(clz, id, time=86400, update=False):
@@ -341,8 +341,12 @@ def date_to_array(date):
 
 
 class CouchQuery(object):
-
-    def __init__(self):
+    U0FFF = "\u0fff"
+    U0000 = "\u0000"
+    
+    def __init__(self, model, bucket):
+        self.bucket = bucket
+        self.model = model
         self.q = {'limit': 20, 'page': 1}
 
     def limit(self, count):
@@ -401,3 +405,6 @@ class CouchQuery(object):
     def sort(self, descending=True):
         self.q['descending'] = descending
         return self
+
+    def view(self):
+        pass

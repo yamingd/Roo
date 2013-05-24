@@ -50,7 +50,12 @@ class Form(object):
             if len(tmp) == 1:
                 continue
             m.setdefault(tmp[0], {})
-            m[tmp[0]][tmp[1]] = self.c.get_argument(key)
+            values = self.c.get_arguments(key)
+            if len(values) == 1:
+                values = values[0]
+            elif len(values) < 1:
+                values = ''
+            m[tmp[0]][tmp[1]] = values
         return m
 
 

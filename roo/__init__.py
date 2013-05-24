@@ -4,5 +4,9 @@
 class enum(object):
 
     def __init__(self, *args):
+        self.sets = args
         for a in args:
-            setattr(self, a, a)
+            if isinstance(a, set):
+                setattr(self, a[0], a[1])
+            else:
+                setattr(self, a, a)

@@ -23,6 +23,7 @@ except:
 import roo.log
 logger = roo.log.logger(__name__)
 
+from roo import enum
 from roo.router import route
 from roo.plugin import manager as pm
 from roo.model import EntityModel
@@ -115,6 +116,8 @@ class RooApplication(tornado.web.Application):
             try:
                 if issubclass(thing, EntityModel):
                     thing.init(self)
+                    self.models[name] = thing
+                elif isinstance(thing, enum):
                     self.models[name] = thing
             except TypeError:
                 # most likely a builtin class or something
