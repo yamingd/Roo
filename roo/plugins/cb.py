@@ -206,7 +206,7 @@ class CouchbaseModel(EntityModel):
             ddoc = clz.get_ddoc()
         results = ddoc[args[0]].results(params=kwargs)
         if clz.app.debug:
-            logger.debug(results)
+            logger.debug(results.results)
         return results
 
     @classmethod
