@@ -88,7 +88,8 @@ class RooApplication(tornado.web.Application):
         scan app/controllers folder to generate handlers and routes
         """
         logger.info("loading http request handlers")
-        temp = __import__('app.controllers', globals(), locals(), ['controllers'], -1)
+        temp = __import__('app.controllers', globals(), locals(), [
+                          'controllers'], -1)
         for name in [x for x in dir(temp) if re.findall('[A-Z]\w+', x)]:
             thing = getattr(temp, name)
             logger.info('%s, %s' % (name, thing))
@@ -159,14 +160,8 @@ class RooApplication(tornado.web.Application):
         self.ui_modules_map = {}
         _ui_modules = __import__(
             'app.views.modules', globals(), locals(), ['ui_modules'], -1)
-        try:
-            ui_modules = _ui_modules.ui_modules
-        except AttributeError:
-            # this app simply doesn't have a ui_modules.py file
-            return
-
-        for name in [x for x in dir(ui_modules) if re.findall('[A-Z]\w+', x)]:
-            thing = getattr(ui_modules, name)
+        for name in [x for x in dir(_ui_modules) if re.findall('[A-Z]\w+', x)]:
+            thing = getattr(_ui_modules, name)
             logger.info(thing)
             try:
                 if issubclass(thing, tornado.web.UIModule):

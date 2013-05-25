@@ -162,7 +162,7 @@ class CouchbaseModel(EntityModel):
         if clz.ddoc_name:
             ddoc_name = clz.ddoc_name
         else:
-            ddoc_name = clz.__res_name__
+            ddoc_name = getattr(clz, '__res_name__', '')
         return ddoc_name
 
     @classmethod

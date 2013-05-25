@@ -2,6 +2,7 @@
 import roo.log
 logger = roo.log.logger(__name__)
 
+import re
 from datetime import datetime
 import tornado.web
 from roo import threadlocal
@@ -77,6 +78,7 @@ class Controller(tornado.web.RequestHandler):
         kwargs = tornado.web.RequestHandler.get_template_namespace(self)
         kwargs.update(self.render_context)
         kwargs['conf'] = self.application.settings
+        kwargs['nl2pbr'] = self.nl2pbr
         return kwargs
 
     def xrender(self, **kwargs):
@@ -222,10 +224,25 @@ class Controller(tornado.web.RequestHandler):
         return m
 
     def write_ok(self, msg='OK', data=[], total=0):
-        self.write(self._wrap_data(status=200, msg=msg, data=data, total=total))
+        self.write(self._wrap_data(
+            status=200, msg=msg, data=data, total=total))
 
     def write_verror(self, msg='error', errors=[], status=601):
         self.write(self._wrap_data(status=status, msg=msg, data=errors))
+
+    def nl2pbr(self, s):
+        """
+        {{ nl2pbr }}
+
+        Convert newlines into <p> and <br />s.
+        """
+        if not isinstance(s, basestring):
+            s = str(s)
+        s = re.sub(r'\r\n|\r|\n', '\n', s)
+        paragraphs = re.split('\n{2,}', s)
+        paragraphs = ['<p>%s</p>' % p.strip().replace(
+            '\n', '<br />') for p in paragraphs]
+        return '\n\n'.join(paragraphs)
 
 
 class UrlDebug(Controller):
