@@ -240,9 +240,11 @@ class Controller(tornado.web.RequestHandler):
             s = str(s)
         s = re.sub(r'\r\n|\r|\n', '\n', s)
         paragraphs = re.split('\n{2,}', s)
+        if len(paragraphs) <= 1:
+            return s
         paragraphs = ['<p>%s</p>' % p.strip().replace(
             '\n', '<br />') for p in paragraphs]
-        return '\n\n'.join(paragraphs)
+        return ''.join(paragraphs)
 
 
 class UrlDebug(Controller):
