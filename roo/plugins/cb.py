@@ -172,9 +172,13 @@ class CouchbaseModel(EntityModel):
     @classmethod
     def find(clz, id, time=86400, update=False):
         key = u'%s:%s' % (clz.__res_name__, id.__str__())
-        json_str = clz.bucket.get(key)
-        logger.debug('find-byid = ' + key + " >> " + str(json_str))
-        return clz.from_json(json_str[2])
+        try:
+            json_str = clz.bucket.get(key)
+            logger.debug('find-byid = ' + key + " >> " + str(json_str))
+            return clz.from_json(json_str[2])
+        except Exception, ex:
+            logger.error("%s, %s" % (key, ex))
+            return None
 
     @classmethod
     def find_one(clz, *args, **kwargs):
