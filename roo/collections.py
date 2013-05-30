@@ -139,7 +139,7 @@ class StatCollection(object):
         self.rows = []
         self.item_clazz = item_clazz
         for item in result:
-            self.keys.append(item.key)
+            self.keys.append(item['key'])
             self.rows.append(StatItem(item, item_clazz))
         if self.total_rows == 1 and len(self.rows) > 1:
             self.total_rows = len(self.rows)
@@ -163,8 +163,8 @@ class StatItem(object):
         """
         item.value would be a dict.
         """
-        self.key = item.key
-        self.stat = item.value
+        self.key = item['key']
+        self.stat = item['value']
         self.item_clazz = item_clazz
 
     def __getattr__(self, key):

@@ -30,27 +30,41 @@ class CouchbasePlugin(BasePlugin):
         self.buckets = {}
         self.conf = application.settings.couchbase
         self.conf.setdefault('port', 8091)
-        self.client = Couchbase('%s:%s' % (
-            self.conf.ip, self.conf.port), username=self.conf.user, password=self.conf.passwd)
-        setattr(application, 'cb', self.client)
         setattr(application, 'cbb', self.get_bucket)
         setattr(application, 'cq', CouchQuery)
         self.scan_ddoc(os.path.join(application.root, 'ddoc'))
         logger.info('ddocs:%s, views:%s' % (len(self.ddocs), len(self.views)))
 
     def on_before(self, controller):
-        setattr(controller, 'cb', self.client)
         setattr(controller, 'cq', CouchQuery)
 
     def get_bucket(self, name):
         bucket = self.buckets.get(name, None)
         if bucket:
             return bucket
-        bucket = self.client[name]
+        bucket = Couchbase.connect(
+            host=self.conf.ip, port=self.conf.port, bucket=name,
+            username=self.conf.user, password=self.conf.passwd)
         self.buckets[name] = bucket
         return bucket
 
     def create_ddoc(self, bucket, ddoc_name):
+        """
+        DESIGN = {
+            '_id' : '_design/search_keywords',
+            'language' : 'javascript',
+            'views' : {
+                'top_keywords' : {
+                    'map' :
+                    function(doc) {
+                        if (typeof doc === 'number') {
+                            emit(doc, null);
+                        }
+                    }
+                }
+            }
+        }
+        """
         view_names = self.ddocs[ddoc_name]
         doc_id = "_design/%s" % ddoc_name
         doc_views = {}
@@ -62,7 +76,8 @@ class CouchbasePlugin(BasePlugin):
             if view_item['reduce']:
                 item['reduce'] = view_item['reduce']
             doc_views[view_name] = item
-        bucket[doc_id] = {"views": doc_views}
+        ddoc = {'_id': doc_id, 'language': 'javascript', 'views': doc_views}
+        bucket._design(ddoc_name, ddoc)
 
     def scan_ddoc(self, folder):
         self.ddocs = {}
@@ -149,13 +164,10 @@ class CouchbaseModel(EntityModel):
             logger.info("create ddoc: %s " % clz.get_ddoc_name())
 
     @classmethod
-    def pkid(clz):
+    def pkid(clz, init=1):
         key = u'pk:o%s' % clz.__res_name__
-        return clz.bucket.incr(key, init=1)[0]
-
-    @classmethod
-    def get_ddoc(clz):
-        return clz.bucket['_design/' + clz.get_ddoc_name()]
+        rv = clz.bucket.incr(key, initial=init)
+        return rv.value
 
     @classmethod
     def get_ddoc_name(clz):
@@ -168,17 +180,35 @@ class CouchbaseModel(EntityModel):
     @classmethod
     def query(clz):
         return CouchQuery(clz, clz.bucket)
+    
+    @classmethod
+    def _get(clz, key):
+        try:
+            rv = clz.bucket.get(key)
+            return rv.value
+        except Exception as ex:
+            logger.error("%s, %s" % (key, ex))
+            return None
+    
+    @classmethod
+    def _set(clz, key, value, exp=0, flags=0, new=False):
+        if new:
+            clz.bucket.add(key, value, ttl=exp)
+        else:
+            clz.bucket.set(key, value, ttl=exp)
 
     @classmethod
     def find(clz, id, time=86400, update=False):
         key = u'%s:%s' % (clz.__res_name__, id.__str__())
-        try:
-            json_str = clz.bucket.get(key)
-            logger.debug('find-byid = ' + key + " >> " + str(json_str))
-            return clz.from_json(json_str[2])
-        except Exception, ex:
-            logger.error("%s, %s" % (key, ex))
-            return None
+        rv = clz._get(key)
+        if clz.app.debug:
+            logger.debug('find-byid = ' + key + " >> " + str(rv))
+        if rv is not None:
+            if isinstance(rv, dict):
+                return clz(**rv)
+            else:
+                return clz.from_json(rv)
+        return None
 
     @classmethod
     def find_one(clz, *args, **kwargs):
@@ -192,6 +222,9 @@ class CouchbaseModel(EntityModel):
 
     @classmethod
     def find_view(clz, *args, **kwargs):
+        """
+        {u'reason': u'invalid UTF-8 JSON: {{error,{1,"lexical error: invalid char in json text."}},"admin"}', u'error': u'bad_request'}
+        """
         kwargs.setdefault('limit', 20)
         kwargs.setdefault('page', 1)
 
@@ -205,13 +238,16 @@ class CouchbaseModel(EntityModel):
         kwargs.pop('page', None)
 
         if len(args) >= 2:
-            ddoc = clz.bucket['_design/' + args[1]]
+            ddoc = args[1]
         else:
-            ddoc = clz.get_ddoc()
-        results = ddoc[args[0]].results(params=kwargs)
+            ddoc = clz.get_ddoc_name()
+        rvt = clz.bucket._view(ddoc, args[0], kwargs)
         if clz.app.debug:
-            logger.debug(results.results)
-        return results
+            logger.debug(rvt.value)
+        if 'error' in rvt.value:
+            raise Exception('find view error, ddoc=%s, view=%s, params=%s, reason:%s' % (
+                ddoc, args[0], str(kwargs), rvt.value['reason']))
+        return rvt.value
 
     @classmethod
     def find_list(clz, *args, **kwargs):
@@ -238,11 +274,12 @@ class CouchbaseModel(EntityModel):
         page = kwargs.get('page', 1)
         idfmap = kwargs.pop('fmap', long)
         results = clz.find_view(*args, **kwargs)
-        total = results.total_rows
+        total = results['total_rows']
         itemids = []
-        for item in results:
+        for item in results['rows']:
             itemids.append(item['id'].split(':')[-1])
-        logger.debug(str(total) + ','.join(itemids))
+        if clz.app.debug:
+            logger.debug(str(total) + ','.join(itemids))
         rs = RowSet(itemids, clz, total=total,
                     limit=limit, start=page, fmap=idfmap)
         return rs
@@ -275,8 +312,8 @@ class CouchbaseModel(EntityModel):
         """
         kwargs['group'] = True
         kwargs['reduce'] = True
-        results = clz.find_view(*args, **kwargs)
-        return StatCollection(results)
+        rvt = clz.find_view(*args, **kwargs)
+        return StatCollection(rvt['rows'])
 
     @classmethod
     def get_stat(clz, *args, **kwargs):
@@ -301,7 +338,7 @@ class CouchbaseModel(EntityModel):
         exp = kwargs.get('time', 0)
         flags = kwargs.get('flags', 0)
         key = '%s:%s' % (clz.__res_name__, o.id)
-        clz.bucket.add(key, exp, flags, o.as_json())
+        clz._set(key, o, exp=exp, flags=flags, new=True)
         return o.id
 
     @classmethod
@@ -316,7 +353,7 @@ class CouchbaseModel(EntityModel):
         exp = kwargs.get('time', 0)
         flags = kwargs.get('flags', 0)
         key = '%s:%s' % (clz.__res_name__, o.id)
-        clz.bucket.set(key, exp, flags, o.as_json())
+        clz._set(key, o, exp=exp, flags=flags)
         return True
 
     @classmethod
@@ -347,7 +384,7 @@ def date_to_array(date):
 class CouchQuery(object):
     U0FFF = "\u0fff"
     U0000 = "\u0000"
-    
+
     def __init__(self, model, bucket):
         self.bucket = bucket
         self.model = model
@@ -363,6 +400,8 @@ class CouchQuery(object):
         return self
 
     def key(self, value):
+        if not value.startswith('"'):
+            value = '"' + value + '"'
         self.q['key'] = value
         return self
 
