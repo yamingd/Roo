@@ -196,6 +196,11 @@ class CouchbaseModel(EntityModel):
             clz.bucket.add(key, value, ttl=exp)
         else:
             clz.bucket.set(key, value, ttl=exp)
+    
+    @classmethod
+    def _incr(clz, key, init=1):
+        rv = clz.bucket.incr(key, initial=init)
+        return rv.value
 
     @classmethod
     def find(clz, id, time=86400, update=False):
