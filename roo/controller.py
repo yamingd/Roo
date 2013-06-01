@@ -246,6 +246,16 @@ class Controller(tornado.web.RequestHandler):
             '\n', '<br />') for p in paragraphs]
         return ''.join(paragraphs)
 
+    def get_path_intvalue(self, key, default=None):
+        val = self.path_kwargs.get(key, default)
+        if len(val) == 0:
+            return default
+        return int(val)
+
+    def get_path_value(self, key, default=None):
+        val = self.path_kwargs.get(key, default)
+        return val
+
 
 class UrlDebug(Controller):
 

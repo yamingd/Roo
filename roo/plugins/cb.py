@@ -198,6 +198,10 @@ class CouchbaseModel(EntityModel):
             clz.bucket.set(key, value, ttl=exp)
     
     @classmethod
+    def _add(clz, key, value, exp=0, flags=0):
+        clz.bucket.add(key, value, ttl=exp)
+
+    @classmethod
     def _incr(clz, key, init=1):
         rv = clz.bucket.incr(key, initial=init)
         return rv.value
@@ -400,6 +404,7 @@ class CouchQuery(object):
         return self
 
     def page(self, index):
+        index = int(index)
         count = self.q.get('limit', 0) * (index - 1)
         self.q['skip'] = count
         return self

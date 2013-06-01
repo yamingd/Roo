@@ -34,6 +34,8 @@ class RowSet(object):
         if wid in self._caches:
             return self._caches[wid]
         ret = self.item_func(wid)
+        if ret is None:
+            return None
         if wid in self.extras:
             m = self.extras[wid]
             for name in m:
