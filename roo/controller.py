@@ -256,6 +256,12 @@ class Controller(tornado.web.RequestHandler):
         val = self.path_kwargs.get(key, default)
         return val
 
+    def get_long_arg(self, key, default=None):
+        val = self.get_argument(key, None)
+        if val is None or len(val) == 0:
+            return default
+        return long(val)
+
 
 class UrlDebug(Controller):
 

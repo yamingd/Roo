@@ -45,7 +45,7 @@ distutils.core.setup(
     },
     install_requires=[
         "tornado",
-        "jsonlib2",
+        "simplejson",
         "pika",
         "pycurl",
         "twisted",
