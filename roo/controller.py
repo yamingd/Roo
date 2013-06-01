@@ -4,6 +4,8 @@ logger = roo.log.logger(__name__)
 
 import re
 from datetime import datetime
+import urllib
+import mimetypes
 import tornado.web
 from roo import threadlocal
 from roo.router import route
@@ -261,6 +263,14 @@ class Controller(tornado.web.RequestHandler):
         if val is None or len(val) == 0:
             return default
         return long(val)
+
+    def send_file(self, file_path):
+        url = urllib.pathname2url(file_path)
+        mtype, mcoding = mimetypes.guess_type(url)
+        if mtype is None:
+            mtype = "application/octet-stream"
+        self.add_header("Content-Type", mtype)
+        self.add_header("X-Accel-Redirect", file_path)
 
 
 class UrlDebug(Controller):
