@@ -7,7 +7,7 @@ from datetime import datetime
 from couchbase import Couchbase
 from roo.plugin import BasePlugin, plugin
 from roo.model import EntityModel
-from roo.collections import RowSet, StatCollection
+from roo.collections import RowSet
 from roo.controller import Controller
 from roo.router import route
 
@@ -322,14 +322,14 @@ class CouchbaseModel(EntityModel):
         kwargs['group'] = True
         kwargs['reduce'] = True
         rvt = clz.find_view(*args, **kwargs)
-        return StatCollection(rvt['rows'])
+        return rvt['rows']
 
     @classmethod
     def get_stat(clz, *args, **kwargs):
         kwargs['limit'] = 1
         rs = clz.find_stats(*args, **kwargs)
-        if rs.total_rows > 0:
-            return rs[0]
+        if len(rs) > 0:
+            return rs[0].value
         return None
 
     @classmethod
