@@ -250,7 +250,7 @@ class Controller(tornado.web.RequestHandler):
 
     def get_path_intvalue(self, key, default=None):
         val = self.path_kwargs.get(key, default)
-        if len(val) == 0:
+        if not isinstance(val, int) and len(val) == 0:
             return default
         return int(val)
 
@@ -266,11 +266,13 @@ class Controller(tornado.web.RequestHandler):
 
     def send_file(self, file_path):
         url = urllib.pathname2url(file_path)
+        if self.application.debug:
+            logger.debug(url)
         mtype, mcoding = mimetypes.guess_type(url)
         if mtype is None:
             mtype = "application/octet-stream"
         self.add_header("Content-Type", mtype)
-        self.add_header("X-Accel-Redirect", file_path)
+        self.add_header("X-Accel-Redirect", url)
 
 
 class UrlDebug(Controller):
