@@ -65,6 +65,8 @@ class CouchbasePlugin(BasePlugin):
             }
         }
         """
+        if ddoc_name not in self.ddocs:
+            return
         view_names = self.ddocs[ddoc_name]
         doc_id = "_design/%s" % ddoc_name
         doc_views = {}
