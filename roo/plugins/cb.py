@@ -334,7 +334,7 @@ class CouchbaseModel(EntityModel):
         kwargs['limit'] = 1
         rs = clz.find_stats(*args, **kwargs)
         if len(rs) > 0:
-            return rs[0].value
+            return rs[0]['value']
         return None
 
     @classmethod
@@ -415,7 +415,7 @@ class CouchQuery(object):
         return self
 
     def key(self, value):
-        if not value.startswith('"'):
+        if isinstance(value, str) and not value.startswith('"'):
             value = '"' + value + '"'
         self.q['key'] = value
         return self
