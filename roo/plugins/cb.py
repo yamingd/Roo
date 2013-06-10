@@ -66,6 +66,7 @@ class CouchbasePlugin(BasePlugin):
         }
         """
         if ddoc_name not in self.ddocs:
+            logger.info("create ddoc: %s None. " % ddoc_name)
             return
         view_names = self.ddocs[ddoc_name]
         doc_id = "_design/%s" % ddoc_name
@@ -79,7 +80,9 @@ class CouchbasePlugin(BasePlugin):
                 item['reduce'] = view_item['reduce']
             doc_views[view_name] = item
         ddoc = {'_id': doc_id, 'language': 'javascript', 'views': doc_views}
-        bucket._design(ddoc_name, ddoc)
+        ret = bucket._design(ddoc_name, ddoc)
+        logger.info("create ddoc: %s, %s, %s" % (
+            ddoc_name, ', '.join(doc_views.keys()), ret))
 
     def scan_ddoc(self, folder):
         self.ddocs = {}
@@ -182,7 +185,7 @@ class CouchbaseModel(EntityModel):
     @classmethod
     def query(clz):
         return CouchQuery(clz, clz.bucket)
-    
+
     @classmethod
     def _get(clz, key):
         try:
@@ -191,14 +194,14 @@ class CouchbaseModel(EntityModel):
         except Exception as ex:
             logger.error("%s, %s" % (key, ex))
             return None
-    
+
     @classmethod
     def _set(clz, key, value, exp=0, flags=0, new=False):
         if new:
             clz.bucket.add(key, value, ttl=exp)
         else:
             clz.bucket.set(key, value, ttl=exp)
-    
+
     @classmethod
     def _add(clz, key, value, exp=0, flags=0):
         clz.bucket.add(key, value, ttl=exp)
