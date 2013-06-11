@@ -415,7 +415,9 @@ class CouchQuery(object):
         return self
 
     def key(self, value):
-        if isinstance(value, str) and not value.startswith('"'):
+        if value is None:
+            return self
+        if hasattr(value, 'startswith') and not value.startswith('"'):
             value = '"' + value + '"'
         self.q['key'] = value
         return self
