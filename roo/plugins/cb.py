@@ -215,8 +215,8 @@ class CouchbaseModel(EntityModel):
     def find(clz, id, time=86400, update=False):
         key = u'%s:%s' % (clz.__res_name__, id.__str__())
         rv = clz._get(key)
-        if clz.app.debug:
-            logger.debug('find-byid = ' + key + " >> " + str(rv))
+        #if clz.app.debug:
+        #    logger.debug('find-byid = ' + key + " >> " + str(rv))
         if rv is not None:
             if isinstance(rv, dict):
                 return clz(**rv)
@@ -250,7 +250,8 @@ class CouchbaseModel(EntityModel):
             kwargs.pop('limit', None)
             kwargs.pop('skip', None)
         kwargs.pop('page', None)
-
+        if clz.app.debug:
+            logger.debug(kwargs)
         if len(args) >= 2:
             ddoc = args[1]
         else:
@@ -412,6 +413,7 @@ class CouchQuery(object):
         index = int(index)
         count = self.q.get('limit', 0) * (index - 1)
         self.q['skip'] = count
+        self.q['page'] = index
         return self
 
     def key(self, value):
