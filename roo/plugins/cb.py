@@ -4,7 +4,11 @@ logger = roo.log.logger(__name__)
 
 import os
 from datetime import datetime
+import couchbase
 from couchbase import Couchbase
+from roo.lib import jsonfy
+couchbase.set_json_converters(jsonfy.dumps, jsonfy.loads)
+
 from roo.plugin import BasePlugin, plugin
 from roo.model import EntityModel
 from roo.collections import RowSet
@@ -42,6 +46,7 @@ class CouchbasePlugin(BasePlugin):
         bucket = self.buckets.get(name, None)
         if bucket:
             return bucket
+
         bucket = Couchbase.connect(
             host=self.conf.ip, port=self.conf.port, bucket=name,
             username=self.conf.user, password=self.conf.passwd)
@@ -256,7 +261,7 @@ class CouchbaseModel(EntityModel):
             ddoc = args[1]
         else:
             ddoc = clz.get_ddoc_name()
-        rvt = clz.bucket._view(ddoc, args[0], kwargs)
+        rvt = clz.bucket._view(ddoc, args[0], params=kwargs)
         if clz.app.debug:
             logger.debug(rvt.value)
         if 'error' in rvt.value:
