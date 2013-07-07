@@ -255,12 +255,13 @@ class CouchbaseModel(EntityModel):
             kwargs.pop('limit', None)
             kwargs.pop('skip', None)
         kwargs.pop('page', None)
-        if clz.app.debug:
-            logger.debug(kwargs)
         if len(args) >= 2:
             ddoc = args[1]
         else:
             ddoc = clz.get_ddoc_name()
+        if clz.app.debug:
+            logger.debug('ddoc: ' + ddoc)
+            logger.debug(kwargs)
         rvt = clz.bucket._view(ddoc, args[0], params=kwargs)
         if clz.app.debug:
             logger.debug(rvt.value)
@@ -299,7 +300,7 @@ class CouchbaseModel(EntityModel):
         for item in results['rows']:
             itemids.append(item['id'].split(':')[-1])
         if clz.app.debug:
-            logger.debug(str(total) + ','.join(itemids))
+            logger.debug(str(total) + ' / ' + ','.join(itemids))
         rs = RowSet(itemids, clz, total=total,
                     limit=limit, start=page, fmap=idfmap)
         return rs
@@ -424,8 +425,6 @@ class CouchQuery(object):
     def key(self, value):
         if value is None:
             return self
-        if hasattr(value, 'startswith') and not value.startswith('"'):
-            value = '"' + value + '"'
         self.q['key'] = value
         return self
 

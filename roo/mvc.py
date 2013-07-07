@@ -115,13 +115,14 @@ class RooApplication(tornado.web.Application):
             thing = getattr(temp, name)
             logger.info('%s, %s' % (name, thing))
             try:
-                if issubclass(thing, EntityModel):
-                    thing.init(self)
+                if isinstance(thing, enum):
                     self.models[name] = thing
-                elif isinstance(thing, enum):
+                elif issubclass(thing, EntityModel):
+                    thing.init(self)
                     self.models[name] = thing
             except TypeError:
                 # most likely a builtin class or something
+                logger.exception('import model error.')
                 pass
         logger.info(self.models)
 
