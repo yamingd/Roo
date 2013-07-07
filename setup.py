@@ -52,7 +52,9 @@ distutils.core.setup(
         "pylibmc",
         "redis",
         "beanstalkt",
-        "requests"
+        "requests",
+        "ua-parser",
+        "user-agents"
     ],
     ext_modules = extensions,
     author="yaming_deng",

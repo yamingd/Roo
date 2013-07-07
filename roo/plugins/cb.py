@@ -85,7 +85,7 @@ class CouchbasePlugin(BasePlugin):
                 item['reduce'] = view_item['reduce']
             doc_views[view_name] = item
         ddoc = {'_id': doc_id, 'language': 'javascript', 'views': doc_views}
-        ret = bucket._design(ddoc_name, ddoc)
+        ret = bucket.design_create(ddoc_name, ddoc, use_devmode=False, syncwait=5)
         logger.info("create ddoc: %s, %s, %s" % (
             ddoc_name, ', '.join(doc_views.keys()), ret))
 
