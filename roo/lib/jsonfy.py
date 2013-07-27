@@ -65,6 +65,8 @@ def _to_klass(m):
 
 
 def dumps(obj):
+    if isinstance(obj, unicode) or isinstance(obj, str):
+        return obj
     if isinstance(obj, list):
         return json.dumps(map(dict, map(_out_dict, obj)))
     else:

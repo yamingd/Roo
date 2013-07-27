@@ -192,9 +192,9 @@ class CouchbaseModel(EntityModel):
         return CouchQuery(clz, clz.bucket)
 
     @classmethod
-    def _get(clz, key):
+    def _get(clz, key, no_format=False):
         try:
-            rv = clz.bucket.get(key)
+            rv = clz.bucket.get(key, no_format=no_format)
             return rv.value
         except Exception as ex:
             logger.error("%s, %s" % (key, ex))
