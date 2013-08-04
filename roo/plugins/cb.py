@@ -52,6 +52,9 @@ class CouchbasePlugin(BasePlugin):
             username=self.conf.user, password=self.conf.passwd)
         self.buckets[name] = bucket
         return bucket
+    
+    def map_bucket(self, name, bucket):
+        self.buckets[name] = bucket
 
     def create_ddoc(self, bucket, ddoc_name):
         """
@@ -144,6 +147,44 @@ class DdocController(Controller):
                 self.write("create ddoc: %s " % ddoc_name)
 
 
+@route('/admin/couchbase/json/(?P<id>[a-zA-Z0-9:_])', package=False)
+class DdocJSonController(Controller):
+    require_auth = True
+
+    def get(self, *args, **kwargs):
+        cbs = self.application.plugins.couchbase
+        id = kwargs.get('id')
+        if len(id) == 0:
+            self.write("")
+        model = id.split(':')[0]
+        c = cbs.get_bucket(model)
+        try:
+            rv = c.get(id)
+            self.write(rv.value)
+        except Exception as ex:
+            logger.error("%s, %s" % (id, ex))
+            self.write("Error")
+
+
+@route('/admin/couchbase/touch/(?P<id>[a-zA-Z0-9:_])', package=False)
+class DdocTouchController(Controller):
+    require_auth = True
+
+    def get(self, *args, **kwargs):
+        cbs = self.application.plugins.couchbase
+        id = kwargs.get('id')
+        if len(id) == 0:
+            self.write("")
+        model = id.split(':')[0]
+        c = cbs.get_bucket(model)
+        try:
+            c.touch(id, ttl=10)
+            self.write("Done")
+        except Exception as ex:
+            logger.error("%s, %s" % (id, ex))
+            self.write("Error")
+
+
 class CouchbaseModel(EntityModel):
     bucket_name = None
     ddoc_name = None
@@ -168,6 +209,7 @@ class CouchbaseModel(EntityModel):
         if clz.bucket_name is None:
             clz.bucket_name = application.settings.couchbase.bucket
         setattr(clz, 'bucket', application.cbb(clz.bucket_name))
+        application.plugins.couchbase.map_bucket(clz.__res_name__, clz.bucket)
         if application.settings.couchbase.init:
             ddoc_name = clz.get_ddoc_name()
             application.plugins.couchbase.create_ddoc(clz.bucket, ddoc_name)
@@ -215,6 +257,11 @@ class CouchbaseModel(EntityModel):
     def _incr(clz, key, init=1):
         rv = clz.bucket.incr(key, initial=init)
         return rv.value
+    
+    @property
+    def cbkey(self):
+        key = u'%s:%s' % (self.__class__.__res_name__, self.id.__str__())
+        return key
 
     @classmethod
     def find(clz, id, time=86400, update=False):
@@ -358,8 +405,7 @@ class CouchbaseModel(EntityModel):
             kwargs = {}
         exp = kwargs.get('time', 0)
         flags = kwargs.get('flags', 0)
-        key = '%s:%s' % (clz.__res_name__, o.id)
-        clz._set(key, o, exp=exp, flags=flags, new=True)
+        clz._set(o.cbkey, o, exp=exp, flags=flags, new=True)
         return o.id
 
     @classmethod
@@ -373,8 +419,7 @@ class CouchbaseModel(EntityModel):
             kwargs = {}
         exp = kwargs.get('time', 0)
         flags = kwargs.get('flags', 0)
-        key = '%s:%s' % (clz.__res_name__, o.id)
-        clz._set(key, o, exp=exp, flags=flags)
+        clz._set(o.cbkey, o, exp=exp, flags=flags)
         return True
 
     @classmethod
@@ -382,15 +427,14 @@ class CouchbaseModel(EntityModel):
         """
         args[0] = id
         """
+        cmt = clz.find(args[0])
+        cmt.if_deleted = 1
+        cmt.delete_at = datetime.now()
+        clz.save(cmt)
+
         flag = kwargs.get('erase', False)
         if flag:
-            key = u'%s:%s' % (clz.__res_name__, args[0])
-            clz.bucket.delete(key)
-        else:
-            cmt = clz.find(args[0])
-            cmt.if_deleted = 1
-            cmt.delete_at = datetime.now()
-            clz.save(cmt)
+            clz.bucket.touch(cmt.cbkey, ttl=30)
 
 
 def date_to_array(date):
