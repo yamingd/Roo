@@ -147,6 +147,15 @@ class DdocController(Controller):
                 self.write("create ddoc: %s " % ddoc_name)
 
 
+@route('/admin/couchbase/views', package=False)
+class DdocController(Controller):
+    require_auth = True
+
+    def get(self):
+        rs = self.application.plugins.couchbase.ddocs
+        self.xrender(rs=rs)
+
+
 @route('/admin/couchbase/json/(?P<id>[a-zA-Z0-9:_])', package=False)
 class DdocJSonController(Controller):
     require_auth = True

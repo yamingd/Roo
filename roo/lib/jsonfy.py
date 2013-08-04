@@ -45,7 +45,7 @@ def str2datetime(s):
 
 
 def _attr_dict(m):
-    #logger.debug(str(m.items()))
+    # logger.debug(str(m.items()))
     for item in m.items():
         v = item[1]
         if isinstance(v, unicode) and re.match(re_dt, v):
@@ -65,11 +65,13 @@ def _to_klass(m):
 
 
 def dumps(obj):
-    if isinstance(obj, unicode) or isinstance(obj, str):
-        return obj
+    if isinstance(obj, unicode) or isinstance(obj, str) or isinstance(obj, long) or isinstance(obj, int) or isinstance(obj, float):
+        return json.dumps(obj)
+    if isinstance(obj, datetime):
+        return obj.strftime(fmt_dt + '.%f')
     if isinstance(obj, list):
         return json.dumps(map(dict, map(_out_dict, obj)))
-    else:
+    elif isinstance(obj, dict) or hasattr(obj, '__dict__'):
         return json.dumps(dict(_out_dict(obj)))
 
 
