@@ -50,6 +50,7 @@ class CouchbasePlugin(BasePlugin):
         bucket = Couchbase.connect(
             host=self.conf.ip, port=self.conf.port, bucket=name,
             username=self.conf.user, password=self.conf.passwd)
+        logger.info('default_format:%s', bucket.default_format)
         self.buckets[name] = bucket
         return bucket
     
@@ -197,8 +198,8 @@ class DdocTouchController(Controller):
 class CouchbaseModel(EntityModel):
     bucket_name = None
     ddoc_name = None
-    U0FFF = "\u0fff"
-    U0000 = "\u0000"
+    KEY_STR_END = '"\u0fff"'
+    KEY_STR_BEGIN = '"\u0000"'
 
     def __init__(self, **kwargs):
         for k in kwargs:
@@ -246,21 +247,23 @@ class CouchbaseModel(EntityModel):
     def _get(clz, key, no_format=False):
         try:
             rv = clz.bucket.get(key, no_format=no_format)
+            if clz.app.debug:
+                logger.debug("_get(%s):%s", key, rv)
             return rv.value
         except Exception as ex:
             logger.error("%s, %s" % (key, ex))
             return None
 
     @classmethod
-    def _set(clz, key, value, exp=0, flags=0, new=False):
+    def _set(clz, key, value, exp=0, flags=0, new=False, format=couchbase.FMT_JSON):
         if new:
-            clz.bucket.add(key, value, ttl=exp)
+            clz.bucket.add(key, value, ttl=exp, format=format)
         else:
-            clz.bucket.set(key, value, ttl=exp)
+            clz.bucket.set(key, value, ttl=exp, format=format)
 
     @classmethod
-    def _add(clz, key, value, exp=0, flags=0):
-        clz.bucket.add(key, value, ttl=exp)
+    def _add(clz, key, value, exp=0, flags=0, format=couchbase.FMT_JSON):
+        clz.bucket.add(key, value, ttl=exp, format=couchbase.FMT_JSON)
 
     @classmethod
     def _incr(clz, key, init=1):

@@ -54,6 +54,8 @@ def _attr_dict(m):
 
 
 def _to_klass(m):
+    if not hasattr(m, 'get'):
+        return m
     klass = m.get('klass', None)
     if not klass:
         return dict(_attr_dict(m))
