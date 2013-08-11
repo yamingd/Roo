@@ -3,9 +3,9 @@ from roo import log
 logger = log.logger(__name__)
 
 try:
-    import simplejson as json
+    import simplejson as _json
 except:
-    import json as json
+    import json as _json
 
 import re
 from datetime import datetime
@@ -68,17 +68,19 @@ def _to_klass(m):
 
 def dumps(obj):
     if isinstance(obj, unicode) or isinstance(obj, str) or isinstance(obj, long) or isinstance(obj, int) or isinstance(obj, float):
-        return json.dumps(obj)
+        return _json.dumps(obj)
     if isinstance(obj, datetime):
         return obj.strftime(fmt_dt + '.%f')
     if isinstance(obj, list):
-        return json.dumps(map(dict, map(_out_dict, obj)))
+        return _json.dumps(map(dict, map(_out_dict, obj)))
     elif isinstance(obj, dict) or hasattr(obj, '__dict__'):
-        return json.dumps(dict(_out_dict(obj)))
+        return _json.dumps(dict(_out_dict(obj)))
 
 
 def loads(jstr):
-    m = json.loads(jstr)
+    if isinstance(jstr, unicode) and not jstr.startswith('{') and re.match(re_dt, jstr):
+        return str2datetime(jstr)
+    m = _json.loads(jstr)
     if isinstance(m, list):
         return list(map(_to_klass, m))
     return _to_klass(m)
