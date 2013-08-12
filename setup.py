@@ -54,7 +54,8 @@ distutils.core.setup(
         "beanstalkt",
         "requests",
         "ua-parser",
-        "user-agents"
+        "user-agents",
+        "pil"
     ],
     ext_modules = extensions,
     author="yaming_deng",

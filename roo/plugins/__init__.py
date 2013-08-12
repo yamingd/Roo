@@ -41,3 +41,9 @@ try:
 except ImportError:
 	logger.info("CouchbasePlugin is disabled")
 	pass
+
+try:
+    from imagefs import ImageFSPlugin
+except ImportError:
+	logger.info("ImageFSPlugin is disabled")
+	pass

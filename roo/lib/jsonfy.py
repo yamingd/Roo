@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+"""
+http://blog.csdn.net/hong201/article/details/3888588
+"""
 from roo import log
 logger = log.logger(__name__)
 
@@ -78,8 +81,9 @@ def dumps(obj):
 
 
 def loads(jstr):
-    if isinstance(jstr, unicode) and not jstr.startswith('{') and re.match(re_dt, jstr):
-        return str2datetime(jstr)
+    if not jstr.startswith('{'):
+        if isinstance(jstr, unicode) and re.match(re_dt, jstr):
+            return str2datetime(jstr)
     m = _json.loads(jstr)
     if isinstance(m, list):
         return list(map(_to_klass, m))
