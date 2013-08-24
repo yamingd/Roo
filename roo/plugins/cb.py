@@ -216,8 +216,11 @@ class CouchbaseModel(EntityModel):
         EntityModel.init(application)
         if not hasattr(clz, '__res_name__'):
             return
+        bmap = application.settings.couchbase.bucket
+        _default = bmap.get('default')
+        _bucket_name = bmap.get(clz.__res_name__, _default)
         if clz.bucket_name is None:
-            clz.bucket_name = application.settings.couchbase.bucket
+            clz.bucket_name = _bucket_name
         setattr(clz, 'bucket', application.cbb(clz.bucket_name))
         application.plugins.couchbase.map_bucket(clz.__res_name__, clz.bucket)
         if application.settings.couchbase.init:
