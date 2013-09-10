@@ -5,7 +5,7 @@ logger = roo.log.logger(__name__)
 import os
 from datetime import datetime
 import couchbase
-from couchbase import Couchbase
+from couchbase import Couchbase, LOCKMODE_WAIT
 from roo.lib import jsonfy
 couchbase.set_json_converters(jsonfy.dumps, jsonfy.loads)
 
@@ -14,6 +14,30 @@ from roo.model import EntityModel
 from roo.collections import RowSet
 from roo.controller import Controller
 from roo.router import route
+
+from contextlib import contextmanager
+from Queue import Queue
+
+
+class BucketPool(Queue):
+    def __init__(self, name, args, n_slots=5):
+        Queue.__init__(self, n_slots)
+        self.name = name
+        for x in xrange(n_slots):
+            c = Couchbase.connect(**args)
+            self.put(c)
+
+    @contextmanager
+    def reserve(self, block=False):
+        """Context manager for reserving a client from the pool.
+        If *block* is given and the pool is exhausted, the pool waits for
+        another thread to fill it before returning.
+        """
+        mc = self.get(block)
+        try:
+            yield mc
+        finally:
+            self.put(mc)
 
 
 @plugin
@@ -46,11 +70,17 @@ class CouchbasePlugin(BasePlugin):
         bucket = self.buckets.get(name, None)
         if bucket:
             return bucket
-
-        bucket = Couchbase.connect(
-            host=self.conf.ip, port=self.conf.port, bucket=name,
-            username=self.conf.user, password=self.conf.passwd)
-        logger.info('default_format:%s', bucket.default_format)
+        args = {}
+        args['host'] = self.conf.ip
+        args['port'] = self.conf.port
+        #args['lockmode'] = LOCKMODE_WAIT
+        args['bucket'] = name
+        if self.conf.user:
+            args['username'] = self.conf.user
+        if self.conf.passwd:
+            args['password'] = self.conf.passwd
+        bucket = BucketPool(name, args)
+        #logger.info('default_format:%s', bucket.default_format)
         self.buckets[name] = bucket
         return bucket
     
@@ -89,9 +119,10 @@ class CouchbasePlugin(BasePlugin):
                 item['reduce'] = view_item['reduce']
             doc_views[view_name] = item
         ddoc = {'_id': doc_id, 'language': 'javascript', 'views': doc_views}
-        ret = bucket.design_create(ddoc_name, ddoc, use_devmode=False, syncwait=5)
-        logger.info("create ddoc: %s, %s, %s" % (
-            ddoc_name, ', '.join(doc_views.keys()), ret))
+        with bucket.reserve() as c:
+            ret = c.design_create(ddoc_name, ddoc, use_devmode=False, syncwait=5)
+            logger.info("create ddoc: %s, %s, %s" % (
+                ddoc_name, ', '.join(doc_views.keys()), ret))
 
     def scan_ddoc(self, folder):
         self.ddocs = {}
@@ -149,7 +180,7 @@ class DdocController(Controller):
 
 
 @route('/admin/couchbase/views', package=False)
-class DdocController(Controller):
+class DdocViewsController(Controller):
     require_auth = True
 
     def get(self):
@@ -157,7 +188,7 @@ class DdocController(Controller):
         self.xrender(rs=rs)
 
 
-@route('/admin/couchbase/json/(?P<id>[a-zA-Z0-9:_])', package=False)
+@route('/admin/couchbase/json/(?P<id>[a-zA-Z0-9:_]+)', package=False)
 class DdocJSonController(Controller):
     require_auth = True
 
@@ -167,16 +198,17 @@ class DdocJSonController(Controller):
         if len(id) == 0:
             self.write("")
         model = id.split(':')[0]
-        c = cbs.get_bucket(model)
-        try:
-            rv = c.get(id)
-            self.write(rv.value)
-        except Exception as ex:
-            logger.error("%s, %s" % (id, ex))
-            self.write("Error")
+        cb = cbs.get_bucket(model)
+        with cb.reserve() as c:
+            try:
+                rv = c.get(id)
+                self.write(rv.value)
+            except Exception as ex:
+                logger.error("%s, %s" % (id, ex))
+                self.write("Error")
 
 
-@route('/admin/couchbase/touch/(?P<id>[a-zA-Z0-9:_])', package=False)
+@route('/admin/couchbase/touch/(?P<id>[a-zA-Z0-9:_]+)', package=False)
 class DdocTouchController(Controller):
     require_auth = True
 
@@ -186,13 +218,14 @@ class DdocTouchController(Controller):
         if len(id) == 0:
             self.write("")
         model = id.split(':')[0]
-        c = cbs.get_bucket(model)
-        try:
-            c.touch(id, ttl=10)
-            self.write("Done")
-        except Exception as ex:
-            logger.error("%s, %s" % (id, ex))
-            self.write("Error")
+        cb = cbs.get_bucket(model)
+        with cb.reserve() as c:
+            try:
+                c.touch(id, ttl=10)
+                self.write("Done")
+            except Exception as ex:
+                logger.error("%s, %s" % (id, ex))
+                self.write("Error")
 
 
 class CouchbaseModel(EntityModel):
@@ -231,8 +264,9 @@ class CouchbaseModel(EntityModel):
     @classmethod
     def pkid(clz, init=1):
         key = u'pk:o%s' % clz.__res_name__
-        rv = clz.bucket.incr(key, initial=init)
-        return rv.value
+        with clz.bucket.reserve() as c:
+            rv = c.incr(key, initial=init)
+            return rv.value
 
     @classmethod
     def get_ddoc_name(clz):
@@ -247,31 +281,37 @@ class CouchbaseModel(EntityModel):
         return CouchQuery(clz, clz.bucket)
 
     @classmethod
-    def _get(clz, key, no_format=False):
-        try:
-            rv = clz.bucket.get(key, no_format=no_format)
-            if clz.app.debug:
-                logger.debug("_get(%s):%s", key, rv)
-            return rv.value
-        except Exception as ex:
-            logger.error("%s, %s" % (key, ex))
-            return None
+    def _get(clz, key, quiet=True):
+        with clz.bucket.reserve() as c:
+            try:
+                rv = c.get(key, quiet=quiet)
+                if clz.app.debug:
+                    logger.debug("_get(%s):%s", key, rv)
+                if rv.success:
+                    return rv.value
+                return None
+            except Exception as ex:
+                logger.error("%s, %s" % (key, ex))
+                return None
 
     @classmethod
     def _set(clz, key, value, exp=0, flags=0, new=False, format=couchbase.FMT_JSON):
-        if new:
-            clz.bucket.add(key, value, ttl=exp, format=format)
-        else:
-            clz.bucket.set(key, value, ttl=exp, format=format)
+        with clz.bucket.reserve() as c:
+            if new:
+                c.add(key, value, ttl=exp, format=format)
+            else:
+                c.set(key, value, ttl=exp, format=format)
 
     @classmethod
     def _add(clz, key, value, exp=0, flags=0, format=couchbase.FMT_JSON):
-        clz.bucket.add(key, value, ttl=exp, format=couchbase.FMT_JSON)
+        with clz.bucket.reserve() as c:
+            c.add(key, value, ttl=exp, format=couchbase.FMT_JSON)
 
     @classmethod
     def _incr(clz, key, init=1):
-        rv = clz.bucket.incr(key, initial=init)
-        return rv.value
+        with clz.bucket.reserve() as c:
+            rv = c.incr(key, initial=init)
+            return rv.value
     
     @property
     def cbkey(self):
@@ -324,13 +364,14 @@ class CouchbaseModel(EntityModel):
         if clz.app.debug:
             logger.debug('ddoc: ' + ddoc)
             logger.debug(kwargs)
-        rvt = clz.bucket._view(ddoc, args[0], params=kwargs)
-        if clz.app.debug:
-            logger.debug(rvt.value)
-        if 'error' in rvt.value:
-            raise Exception('find view error, ddoc=%s, view=%s, params=%s, reason:%s' % (
-                ddoc, args[0], str(kwargs), rvt.value['reason']))
-        return rvt.value
+        with clz.bucket.reserve() as c:
+            rvt = c._view(ddoc, args[0], params=kwargs)
+            if clz.app.debug:
+                logger.debug(rvt.value)
+            if 'error' in rvt.value:
+                raise Exception('find view error, ddoc=%s, view=%s, params=%s, reason:%s' % (
+                    ddoc, args[0], str(kwargs), rvt.value['reason']))
+            return rvt.value
 
     @classmethod
     def find_list(clz, *args, **kwargs):
@@ -449,7 +490,8 @@ class CouchbaseModel(EntityModel):
 
         flag = kwargs.get('erase', False)
         if flag:
-            clz.bucket.touch(cmt.cbkey, ttl=30)
+            with clz.bucket.reserve() as c:
+                c.touch(cmt.cbkey, ttl=30)
 
 
 def date_to_array(date):

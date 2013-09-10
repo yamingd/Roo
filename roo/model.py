@@ -112,7 +112,7 @@ def prstat(model_clzz_name):
             _self = args[0]
             if not hasattr(_self, '_stat'):
                 _clzz = _self.__class__
-                print _self, _clzz
+                #print _self, _clzz
                 _clzz = getattr(_clzz.models, model_clzz_name)
                 _self._stat = _clzz.find(getattr(_self, 'id'))
             return _self._stat
@@ -133,6 +133,9 @@ def prref(model_clzz_name, prop_name, idtype=long):
                 _clzz = _self.__class__
                 _clzz = getattr(_clzz.models, model_clzz_name)
                 val = getattr(_self, prop_name)
+                if val is None:
+                    logger.error('prref: value is None. p=' + prop_name)
+                    return None
                 if idtype:
                     val = idtype(val)
                 if not val or val <= 0:
