@@ -6,10 +6,57 @@ import re
 from datetime import datetime
 import urllib
 import mimetypes
+
 import tornado.web
+import tornado.ioloop
+
+from concurrent.futures import ThreadPoolExecutor
+from functools import partial, wraps
+
 from roo import threadlocal
 from roo.router import route
 from roo.collections import RowSet
+from roo.config import settings
+
+cthread = hasattr(settings, 'thread')
+if cthread:
+    EXECUTOR = ThreadPoolExecutor(max_workers=settings.thread.get('workers', 10))
+else:
+    EXECUTOR = None
+    logger.info(u"unblock is disabled, please config settings.thread to enable it.")
+
+
+def unblock(f):
+
+    @tornado.web.asynchronous
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        self = args[0]
+
+        def callback(future):
+            """
+            future.result() => {'data':[], 'msg':u'abc'}
+            """
+            ret = future.result()
+            if ret is None:
+                self.finish()
+            elif isinstance(ret, dict):
+                if 'errors' in ret:
+                    self.write_verror(**ret)
+                else:
+                    self.write_ok(**ret)
+                self.finish()
+            else:
+                self.write(ret)
+                self.finish()
+                
+        EXECUTOR.submit(
+            partial(f, *args, **kwargs)
+        ).add_done_callback(
+            lambda future: tornado.ioloop.IOLoop.instance().add_callback(
+                partial(callback, future)))
+
+    return wrapper
 
 
 class Controller(tornado.web.RequestHandler):

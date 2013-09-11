@@ -5,7 +5,7 @@ logger = roo.log.logger(__name__)
 import os
 from datetime import datetime
 import couchbase
-from couchbase import Couchbase, LOCKMODE_WAIT
+from couchbase import Couchbase
 from roo.lib import jsonfy
 couchbase.set_json_converters(jsonfy.dumps, jsonfy.loads)
 
@@ -14,30 +14,13 @@ from roo.model import EntityModel
 from roo.collections import RowSet
 from roo.controller import Controller
 from roo.router import route
-
-from contextlib import contextmanager
-from Queue import Queue
+from roo import pools
 
 
-class BucketPool(Queue):
-    def __init__(self, name, args, n_slots=5):
-        Queue.__init__(self, n_slots)
-        self.name = name
-        for x in xrange(n_slots):
-            c = Couchbase.connect(**args)
-            self.put(c)
+class BucketPool(pools.Pool):
 
-    @contextmanager
-    def reserve(self, block=False):
-        """Context manager for reserving a client from the pool.
-        If *block* is given and the pool is exhausted, the pool waits for
-        another thread to fill it before returning.
-        """
-        mc = self.get(block)
-        try:
-            yield mc
-        finally:
-            self.put(mc)
+    def make_instance(self):
+        return Couchbase.connect(**self.args)
 
 
 @plugin
@@ -79,7 +62,8 @@ class CouchbasePlugin(BasePlugin):
             args['username'] = self.conf.user
         if self.conf.passwd:
             args['password'] = self.conf.passwd
-        bucket = BucketPool(name, args)
+        slots = self.conf.get('slots', 5)
+        bucket = BucketPool(name, args, n_slots=slots)
         #logger.info('default_format:%s', bucket.default_format)
         self.buckets[name] = bucket
         return bucket

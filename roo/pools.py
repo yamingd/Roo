@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
-import copy
 from Queue import Queue
 from contextlib import contextmanager
 
 
-class ConnectionPool(Queue):
-    def __init__(self, rc, n_slots=5):
-        Queue.__init__(self, n_slots)
-        if rc is not None:
-            self.fill(rc, n_slots)
+class Pool(Queue):
+    def __init__(self, name, args, n_slots=5):
+        Queue.__init__(self, n_slots * 2)
+        self.name = name
+        self.args = args
+        for i in xrange(n_slots):
+            self.put(self.make_instance())
 
     @contextmanager
     def reserve(self, timeout=None):
@@ -16,13 +17,14 @@ class ConnectionPool(Queue):
         If *timeout* is given, it specifiecs how long to wait for a client to
         become available.
         """
-        rc = self.get(True, timeout=timeout)
+        if self.empty():
+            rc = self.make_instance()
+        else:
+            rc = self.get(True, timeout=timeout)
         try:
             yield rc
         finally:
             self.put(rc)
 
-    def fill(self, rc, n_slots):
-        """Fill *n_slots* of the pool with clones of *mc*."""
-        for i in xrange(n_slots):
-            self.put(copy.copy(rc))
+    def make_instance(self):
+        pass
