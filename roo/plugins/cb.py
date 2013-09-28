@@ -476,6 +476,14 @@ class CouchbaseModel(EntityModel):
         if flag:
             with clz.bucket.reserve() as c:
                 c.touch(cmt.cbkey, ttl=30)
+    
+    def ttl(self, ttl=3600*24):
+        """
+        ttl in a week
+        """
+        clz = self.__class__
+        with clz.bucket.reserve() as c:
+            c.touch(self.cbkey, ttl=ttl)
 
 
 def date_to_array(date):

@@ -91,19 +91,21 @@ class HtmlLighter(object):
         words = [item for item in picks if ' ' not in item]
         sents = [item for item in picks if ' ' in item]
         if len(words) > 0:
+            words = list(set(words))
             text = self.words(text, words)
         if len(sents) > 0:
+            sents = list(set(sents))
             for sent in sents:
                 text = self.sentence(text, sent, limit=limit)
+        text = re.sub('(<u>)+', '<u>', text)
+        text = re.sub('(</u>)+', '</u>', text)
         return text
 
 if __name__ == '__main__':
     text = None
     hb = HtmlLighter(u'http://www.51voa.com')
-    with open('profile.txt', 'r') as f:
-        text = hb.strip_tags(f.read())
-    with open('profile.clean.html', 'w+') as f:
-        f.write(text.encode('utf8'))
-    text2 = hb.light(text, ["News", "strong", "hurricane", "the storm", "according to", "scientists wrote the report"])
-    with open('profile.clean2.html', 'w+') as f:
+    with open('sample.txt', 'r') as f:
+        text = f.read()
+    text2 = hb.light(text, ["about to", "about to", "potential", "ups and downs", "declining"])
+    with open('sample.clean2.html', 'w+') as f:
         f.write(text2.encode('utf8'))
