@@ -429,7 +429,7 @@ class CouchbaseModel(EntityModel):
         rs = clz.find_stats(*args, **kwargs)
         if len(rs) > 0:
             return rs[0]['value']
-        return None
+        return {}
 
     @classmethod
     def create(clz, *args, **kwargs):
