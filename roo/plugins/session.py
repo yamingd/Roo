@@ -49,7 +49,7 @@ class SessionPlugin(BasePlugin):
         user = None
         if userid:
             sname = self.session_config.auth_service
-            logger.info(self.application.models)
+            logger.debug(self.application.models)
             auth_service = self.application.models[sname]
             user = auth_service.auth(userid)
             if user:

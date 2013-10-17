@@ -567,3 +567,6 @@ class CouchQuery(object):
 
     def view(self):
         pass
+    
+    def stale(self, value='update_after'):
+        self.q['stale'] = value
