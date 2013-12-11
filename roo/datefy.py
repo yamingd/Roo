@@ -42,9 +42,9 @@ def today_str():
     return format(today())
 
 
-def yesterday():
+def yesterday(days=1):
     dt = datetime.now()
-    dt = dt - timedelta(days=1)
+    dt = dt - timedelta(days=days)
     return datetime(dt.year, dt.month, dt.day)
 
 
