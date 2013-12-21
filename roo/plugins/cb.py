@@ -555,10 +555,7 @@ class CouchQuery(object):
         return self
 
     def reduce(self, value=True):
-        if value:
-            self.q['reduce'] = True
-        else:
-            self.q.pop('reduce', None)
+        self.q['reduce'] = value
         return self
 
     def sort(self, descending=True):
