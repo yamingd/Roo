@@ -12,32 +12,40 @@ except:
 
 import re
 from datetime import datetime
+from datetime import date, time
 
-
-_class_mapped = {}
 fmt_dt = u'%Y-%m-%d %H:%M:%S'
+fmt_dtss = u'%Y-%m-%d %H:%M:%S.%f'
 re_dt = u'^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.\d+)$'
 
 
-def _out_dict(obj):
-    klass = '%s.%s' % (
-        obj.__class__.__module__, obj.__class__.__name__)
-    _class_mapped[klass] = obj.__class__
-    if isinstance(obj, dict):
-        obj['klass'] = klass
-        items = obj.items()
-    else:
-        obj.__dict__['klass'] = klass
-        items = obj.__dict__.items()
-    for item in items:
-        if item[0][0] is '_':
-            continue
-        if isinstance(item[1], str):
-            yield [item[0], item[1].decode()]
-        elif isinstance(item[1], datetime):
-            yield [item[0], item[1].strftime(fmt_dt + '.%f')]
+class CJsonEncoder(_json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime):
+            return obj.strftime(fmt_dtss)
+        elif isinstance(obj, date):
+            return obj.strftime('%Y-%m-%d')
+        elif isinstance(obj, time):
+            return obj.strftime('%H:%M:%S')
         else:
-            yield item
+            return _json.JSONEncoder.default(self, obj)
+
+
+class CJsonDecoder(_json.JSONDecoder):
+    def decode(self, json_string):
+        json_data = _json.loads(json_string)
+        if not hasattr(json_data, 'keys'):
+            return json_data
+        for key in json_data.keys():
+            val = json_data[key]
+            fval = isinstance(val, unicode) or isinstance(val, str)
+            if fval and re.match(re_dt, val):
+                try:
+                    json_data[key] = str2datetime(val)
+                except TypeError:
+                    # It's not a datetime/time object
+                    pass
+        return json_data
 
 
 def str2datetime(s):
@@ -47,44 +55,13 @@ def str2datetime(s):
     return dt
 
 
-def _attr_dict(m):
-    # logger.debug(str(m.items()))
-    for item in m.items():
-        v = item[1]
-        if isinstance(v, unicode) and re.match(re_dt, v):
-            yield [item[0], str2datetime(v)]
-        yield item
-
-
-def _to_klass(m):
-    if not hasattr(m, 'get'):
-        return m
-    klass = m.get('klass', None)
-    if not klass:
-        return dict(_attr_dict(m))
-    klass = _class_mapped.get(klass, None)
-    if not klass:
-        return dict(_attr_dict(m))
-    m = dict(_attr_dict(m))
-    return klass(**m)
-
-
 def dumps(obj):
-    if isinstance(obj, unicode) or isinstance(obj, str) or isinstance(obj, long) or isinstance(obj, int) or isinstance(obj, float):
-        return _json.dumps(obj)
-    if isinstance(obj, datetime):
-        return obj.strftime(fmt_dt + '.%f')
-    if isinstance(obj, list):
-        return _json.dumps(map(dict, map(_out_dict, obj)))
-    elif isinstance(obj, dict) or hasattr(obj, '__dict__'):
-        return _json.dumps(dict(_out_dict(obj)))
+    return _json.dumps(obj, cls=CJsonEncoder)
 
 
 def loads(jstr):
-    if not jstr.startswith('{'):
-        if isinstance(jstr, unicode) and re.match(re_dt, jstr):
-            return str2datetime(jstr)
-    m = _json.loads(jstr)
-    if isinstance(m, list):
-        return list(map(_to_klass, m))
-    return _to_klass(m)
+    return _json.loads(jstr, cls=CJsonDecoder)
+
+if __name__ == '__main__':
+    txt = '{"qq": "", "doc_type": "user", "client_ip": "192.168.1.105", "name": "elsadmin", "roles": ["Administrator"], "level": "L0", "mobile": "", "last_loginat": "", "create_at": "2013-08-24 23:52:43.498737", "real_name": "Administrator", "klass": "app.models.user.User", "client_id": "", "hash_passwd": "e73d094af5cc98447eb6e545e721e4be0b5c4f2b", "wechat_id": "", "reg_app_id": "", "id": 1}'
+    print loads(txt)

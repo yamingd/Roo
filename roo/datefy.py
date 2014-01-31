@@ -62,13 +62,17 @@ def format(date, pattern='%Y%m%d'):
     return date.strftime(pattern)
 
 
-def as_date(str_date, format=u'%Y-%m-%d %H:%M:%S.%f'):
-    return datetime.strptime(str_date, format)
+def as_date(str_date, format=u'%Y-%m-%d %H:%M:%S'):
+    if isinstance(str_date, datetime):
+        return str_date
+    parts = str_date.split('.')
+    return datetime.strptime(parts[0], format)
 
 
-def as_epoch(str_date, format=u'%Y-%m-%d %H:%M:%S.%f'):
+def as_epoch(str_date, format=u'%Y-%m-%d %H:%M:%S'):
     if isinstance(str_date, unicode):
-        dt = datetime.strptime(str_date, format)
+        parts = str_date.split('.')
+        dt = datetime.strptime(parts[0], format)
     elif isinstance(str_date, datetime):
         dt = str_date
     else:

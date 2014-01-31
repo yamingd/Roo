@@ -7,15 +7,41 @@ class Field(object):
 
     def __init__(self, *args):
         self.vmap = args
+    
+    def parse(self, value):
+        return value
+
+
+class TextField(Field):
+
+    def __init__(self, *args):
+        self.vmap = args
+    
+    def parse(self, value):
+        return value
+
+
+class NumberField(Field):
+
+    def __init__(self, *args):
+        self.vmap = args
+    
+    def parse(self, value):
+        if value and len(value) > 0:
+            if ',' in value:
+                return map(long, value.split(','))
+            return long(value)
+        return None
 
 
 class Form(object):
 
-    def __init__(self, controller, model):
+    def __init__(self, controller, model, field_prefix=None):
         self.errors = {}
         self.c = controller
         self.request = controller.request
         self.model = model.__name__.lower() if hasattr(model, '__name__') else model.lower()
+        self.field_prefix = field_prefix
 
     def validate(self):
         """
@@ -25,8 +51,10 @@ class Form(object):
         for item in items:
             field = items.get(item)
             if isinstance(field, Field):
-                keyname = self.model + '.' + item
+                keyname = item if self.field_prefix is None else self.field_prefix + '.' + item
                 values = self.c.get_arguments(keyname)
+                if field.vmap is None:
+                    continue
                 for vname, vargs in field.vmap:
                     vc = validators_map.get(vname, None)
                     if not vc:
@@ -38,24 +66,26 @@ class Form(object):
                         self.errors[keyname] = vv.get_message()
                         break
         return self.errors
-
-    def get_models(self):
+    
+    def get_model(self):
         """
         create model instances from request.
         """
         m = {}
-        args = self.request.arguments
-        for key in args:
-            tmp = key.split('.')
-            if len(tmp) == 1:
+        items = self.__class__.__dict__
+        for key in items:
+            k2 = key if self.field_prefix is None else self.field_prefix + '.' + key
+            field = items.get(key)
+            if not isinstance(field, Field):
                 continue
-            m.setdefault(tmp[0], {})
-            values = self.c.get_arguments(key)
+            values = self.c.get_arguments(k2)
             if len(values) == 1:
-                values = values[0]
+                values = field.parse(values[0])
             elif len(values) < 1:
-                values = ''
-            m[tmp[0]][tmp[1]] = values
+                values = field.parse('')
+            else:
+                values = field.parse(values)
+            m[key] = values
         return m
 
 

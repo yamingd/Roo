@@ -147,7 +147,7 @@ class CouchbasePlugin(BasePlugin):
 class DdocController(Controller):
     require_auth = True
 
-    def get(self):
+    def post(self):
         name = self.get_argument('name', None)
         cbs = self.application.plugins.couchbase
         cbs.scan_ddoc(os.path.join(self.application.root, 'ddoc'))
@@ -155,12 +155,12 @@ class DdocController(Controller):
             model = getattr(self.models, name)
             ddoc_name = model.get_ddoc_name()
             cbs.create_ddoc(model.bucket, ddoc_name)
-            self.write("create ddoc: %s " % ddoc_name)
+            self.write_ok(msg="create ddoc: %s " % ddoc_name)
         else:
             for model in self.models:
                 ddoc_name = model.get_ddoc_name()
                 cbs.create_ddoc(model.bucket, ddoc_name)
-                self.write("create ddoc: %s " % ddoc_name)
+                self.write_ok(msg="create ddoc: %s " % ddoc_name)
 
 
 @route('/admin/couchbase/views', package=False)
@@ -186,7 +186,7 @@ class DdocJSonController(Controller):
         with cb.reserve() as c:
             try:
                 rv = c.get(id)
-                self.write(rv.value)
+                self.write(jsonfy.dumps(rv.value))
             except Exception as ex:
                 logger.error("%s, %s" % (id, ex))
                 self.write("Error")
@@ -210,6 +210,13 @@ class DdocTouchController(Controller):
             except Exception as ex:
                 logger.error("%s, %s" % (id, ex))
                 self.write("Error")
+
+
+def to_clazz(clazz, value):
+    if isinstance(value, dict):
+        return clazz(**value)
+    else:
+        return clazz.from_json(value)
 
 
 class CouchbaseModel(EntityModel):
@@ -275,7 +282,34 @@ class CouchbaseModel(EntityModel):
                     return rv.value
                 return None
             except Exception as ex:
-                logger.error("%s, %s" % (key, ex))
+                logger.error("_get %s" % key)
+                logger.exception(ex)
+                return None
+
+    @classmethod
+    def _getm(clz, keys, quiet=True, clazz=None):
+        if keys is None or len(keys) == 0:
+            return {}
+        with clz.bucket.reserve() as c:
+            try:
+                rv = c.get_multi(keys, quiet=quiet)
+                if clz.app.debug:
+                    logger.debug("_get(%s):%s", keys, rv)
+                if rv.all_ok:
+                    ret = {}
+                    for key in keys:
+                        item = rv.get(key, None)
+                        ret[key] = None
+                        if item:
+                            if clazz:
+                                ret[key] = to_clazz(clazz, item.value)
+                            else:
+                                ret[key] = item.value
+                    return ret
+                return None
+            except Exception as ex:
+                logger.error("%s, %s" % (keys, ex))
+                logger.exception(ex)
                 return None
 
     @classmethod
@@ -314,6 +348,25 @@ class CouchbaseModel(EntityModel):
             else:
                 return clz.from_json(rv)
         return None
+    
+    @classmethod
+    def find_multi(clz, itemids):
+        if itemids:
+            keys = [u'%s:%s' % (clz.__res_name__, kid.__str__()) for kid in itemids]
+            ms = clz._getm(keys, clazz=clz)
+            if ms:
+                items = [ms.get(iid, None) for iid in keys]
+                total = len(itemids)
+            else:
+                logger.error('ms is None or empty')
+                items = []
+                total = 0
+        else:
+            total = 0
+            items = []
+        rs = RowSet(items, None, total=total,
+                    limit=-1, start=1, fmap=None)
+        return rs
 
     @classmethod
     def find_one(clz, *args, **kwargs):
@@ -356,7 +409,21 @@ class CouchbaseModel(EntityModel):
                 raise Exception('find view error, ddoc=%s, view=%s, params=%s, reason:%s' % (
                     ddoc, args[0], str(kwargs), rvt.value['reason']))
             return rvt.value
-
+    
+    @classmethod
+    def count_list(clz, *args, **kwargs):
+        kwargs.pop('lazy', False)
+        kwargs['limit'] = 0
+        kwargs['page'] = 1
+        kwargs['reduce'] = True
+        kwargs['group'] = True
+        kwargs.pop('fmap', long)
+        rvt = clz.find_view(*args, **kwargs)
+        nums = rvt['rows']
+        if nums:
+            return nums[0].get('value', 0)
+        return 0
+        
     @classmethod
     def find_list(clz, *args, **kwargs):
         """
@@ -378,19 +445,28 @@ class CouchbaseModel(EntityModel):
         link:
         http://www.couchbase.com/docs/couchbase-manual-2.0/couchbase-views-writing-querying-selection.html
         """
+        lazy = kwargs.pop('lazy', True)
         limit = kwargs.get('limit', 20)
         page = kwargs.get('page', 1)
         idfmap = kwargs.pop('fmap', long)
         results = clz.find_view(*args, **kwargs)
-        total = results['total_rows']
-        itemids = []
-        for item in results['rows']:
-            itemids.append(item['id'].split(':')[-1])
-        if clz.app.debug:
-            logger.debug(str(total) + ' / ' + ','.join(itemids))
-        rs = RowSet(itemids, clz, total=total,
-                    limit=limit, start=page, fmap=idfmap)
-        return rs
+        total = results.get('total_rows', 0)
+        if not lazy:
+            itemids = [item['id'] for item in results['rows']]
+            ms = clz._getm(itemids, clazz=clz)
+            items = [ms.get(iid, None) for iid in itemids]
+            rs = RowSet(items, None, total=total,
+                        limit=limit, start=page, fmap=None)
+            return rs
+        else:
+            itemids = []
+            for item in results['rows']:
+                itemids.append(item['id'].split(':')[-1])
+            if clz.app.debug:
+                logger.debug(str(total) + ' / ' + ','.join(itemids))
+            rs = RowSet(itemids, clz, total=total,
+                        limit=limit, start=page, fmap=idfmap)
+            return rs
 
     @classmethod
     def find_stats(clz, *args, **kwargs):
@@ -477,7 +553,7 @@ class CouchbaseModel(EntityModel):
             with clz.bucket.reserve() as c:
                 c.touch(cmt.cbkey, ttl=30)
     
-    def ttl(self, ttl=3600*24):
+    def ttl(self, ttl=3600 * 24):
         """
         ttl in a week
         """
@@ -567,3 +643,8 @@ class CouchQuery(object):
     
     def stale(self, value='update_after'):
         self.q['stale'] = value
+        return self
+        
+    def lazy(self, value):
+        self.q['lazy'] = value
+        return self

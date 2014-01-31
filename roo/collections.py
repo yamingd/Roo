@@ -8,7 +8,7 @@ class RowSet(object):
         self.items = map(fmap, items) if fmap else items
         self.clzz = item_clazz
         self.total = total
-        self.item_func = item_clazz.find
+        self.item_func = item_clazz.find if item_clazz else None
         self.limit = limit
         self.start = start
         self.extras = extras
@@ -24,7 +24,7 @@ class RowSet(object):
         return ps
 
     def filter(self, ids):
-        if ids:
+        if self.item_func and ids:
             self.items = list(set(self.items) - set(ids))
 
     def __len__(self):
@@ -46,20 +46,25 @@ class RowSet(object):
     def __getitem__(self, index):
         if isinstance(index, int):
             wid = self.items[index]
-            return self._litem(wid)
+            if self.item_func:
+                return self._litem(wid)
+            else:
+                return wid
         elif isinstance(index, slice):
             wids = self.items[index]
-            rets = []
-            for wid in wids:
-                rets.append(self._litem(wid))
-            return rets
+            if self.item_func:
+                rets = []
+                for wid in wids:
+                    rets.append(self._litem(wid))
+                return rets
+            return wids
 
     def __iter__(self):
         for i in xrange(len(self)):
             yield self[i]
 
     def __repr__(self):
-        return '<RowSet (%s, %s)>' % (self.clzz.__name__, self.items)
+        return '<RowSet (%s, %s)>' % (self.clzz, self.items)
 
     def pop(self):
         if self.items:

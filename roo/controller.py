@@ -14,6 +14,7 @@ from concurrent.futures import ThreadPoolExecutor
 from functools import partial, wraps
 
 from roo import threadlocal
+from roo.lib import jsonfy
 from roo.router import route
 from roo.collections import RowSet
 from roo.config import settings
@@ -33,6 +34,13 @@ def unblock(f):
     def wrapper(*args, **kwargs):
         self = args[0]
 
+        def _call_func(*args, **kwargs):
+            try:
+                return f(*args, **kwargs)
+            except Exception, e:
+                logger.exception(e)
+                raise e
+        
         def callback(future):
             """
             future.result() => {'data':[], 'msg':u'abc'}
@@ -51,7 +59,7 @@ def unblock(f):
                 self.finish()
                 
         EXECUTOR.submit(
-            partial(f, *args, **kwargs)
+            partial(_call_func, *args, **kwargs)
         ).add_done_callback(
             lambda future: tornado.ioloop.IOLoop.instance().add_callback(
                 partial(callback, future)))
@@ -273,10 +281,13 @@ class Controller(tornado.web.RequestHandler):
         return m
 
     def write_ok(self, msg='OK', data=[], total=0):
-        self.write(self._wrap_data(
-            status=200, msg=msg, data=data, total=total))
+        self.set_status(200)
+        m = self._wrap_data(
+            status=200, msg=msg, data=data, total=total)
+        self.write(jsonfy.dumps(m))
 
     def write_verror(self, msg='error', errors=[], status=601):
+        self.set_status(500)
         self.write(self._wrap_data(status=status, msg=msg, data=errors))
 
     def nl2pbr(self, s):
