@@ -129,20 +129,27 @@ def prref(model_clzz_name, prop_name, idtype=long):
         def wrapper(*args, **kwargs):
             _self = args[0]
             _name = '_o_' + prop_name
-            if not hasattr(_self, _name):
-                _clzz = _self.__class__
-                _clzz = getattr(_clzz.models, model_clzz_name)
-                val = getattr(_self, prop_name)
-                if val is None:
-                    logger.error('prref: value is None. p=' + prop_name)
-                    return None
-                if idtype:
-                    val = idtype(val)
-                if not val or val <= 0:
-                    return _clzz()
+            _clzz = _self.__class__
+            _clzz = getattr(_clzz.models, model_clzz_name)
+            val = getattr(_self, prop_name)
+            if val is None:
+                logger.error('prref: value is None. p=' + prop_name)
+                return None
+            if idtype:
+                val = idtype(val)
+            if not val or val <= 0:
+                return _clzz()
+            _ob = None
+            if hasattr(_self, _name):
+                _ob = getattr(_self, _name)
+                if isinstance(_ob, dict):
+                    _ob = _clzz(**_ob)
+                if _ob.id != val:
+                    _ob = None
+            if _ob is None:
                 _ob = _clzz.find(val)
                 setattr(_self, _name, _ob)
-            return getattr(_self, _name)
+            return _ob
         return wrapper
     return fwrapper
 
