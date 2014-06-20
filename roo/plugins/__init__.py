@@ -37,7 +37,7 @@ except ImportError:
 	pass
 
 try:
-    from cb import CouchbasePlugin
+    from cbasync import CouchbasePlugin
 except ImportError:
 	logger.info("CouchbasePlugin is disabled")
 	pass

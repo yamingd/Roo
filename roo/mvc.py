@@ -19,6 +19,10 @@ try:
 except:
     pass
 
+import tornado.platform.twisted
+tornado.platform.twisted.install()
+from twisted.internet import reactor
+
 # Roo
 import roo.log
 logger = roo.log.logger(__name__)

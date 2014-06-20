@@ -284,10 +284,12 @@ class Controller(tornado.web.RequestHandler):
         self.set_status(200)
         m = self._wrap_data(
             status=200, msg=msg, data=data, total=total)
+        self.set_header("Content-Type", "application/json; charset=UTF-8")
         self.write(jsonfy.dumps(m))
 
     def write_verror(self, msg='error', errors=[], status=601):
         self.set_status(500)
+        self.set_header("Content-Type", "application/json; charset=UTF-8")
         self.write(self._wrap_data(status=status, msg=msg, data=errors))
 
     def nl2pbr(self, s):

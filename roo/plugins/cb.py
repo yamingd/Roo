@@ -533,6 +533,7 @@ class CouchbaseModel(EntityModel):
         o = args[0]
         if not kwargs:
             kwargs = {}
+        o.doc_type = clz.__res_name__
         exp = kwargs.get('time', 0)
         flags = kwargs.get('flags', 0)
         clz._set(o.cbkey, o, exp=exp, flags=flags)
