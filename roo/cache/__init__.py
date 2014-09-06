@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 # -*- coding: utf-8 -*-
 
 
@@ -11,10 +14,13 @@ class CacheBase(object):
     def add(self, key, value, time=0, herd=True):
         pass
 
-    def get(self, key, default=None):
-        pass
+    def get(self, key, default=None, callback=None):
+        if callback:
+            callback(default)
+        else:
+            return default
 
-    def set(self, key, value, time=None, herd=True):
+    def set(self, key, value, time=None, herd=True, callback=None):
         pass
 
     def delete(self, key):

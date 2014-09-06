@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 # -*- coding: utf-8 -*-
 import roo.log
 logger = roo.log.logger(__name__)
@@ -16,6 +19,7 @@ class ImageFSPlugin(BasePlugin):
             self.fs = localfs.LocalImageFS()
         else:
             self.fs = None
-
+        setattr(application, 'imagefs', self.fs)
+        
     def on_before(self, controller):
         setattr(controller, 'imagefs', self.fs)

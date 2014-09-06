@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 # -*- coding: utf-8 -*-
 import roo.log
 logger = roo.log.logger(__name__)
@@ -31,7 +34,8 @@ except ImportError:
 	pass
 
 try:
-    from mysql import MySQLPlugin
+    #from mysql import MySQLPlugin
+    from asyncmysql import MySQLPlugin
 except ImportError:
 	logger.info("MySQLPlugin is disabled")
 	pass

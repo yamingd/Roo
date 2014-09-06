@@ -57,7 +57,8 @@ distutils.core.setup(
         "user-agents",
         "pil",
         "txMySQL",
-        "txRedis"
+        "txRedis",
+        "lxml"
     ],
     ext_modules = extensions,
     author="yaming_deng",

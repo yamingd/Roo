@@ -1,4 +1,6 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 import roo.log
 logger = roo.log.logger(__name__)
 
@@ -65,6 +67,51 @@ def unblock(f):
                 partial(callback, future)))
 
     return wrapper
+
+
+class ArgsValue(object):
+    def __init__(self, name, value):
+        self.name = name
+        self.value = value
+
+    def l(self, default=0):
+        if self.value is None or len(self.value) == 0:
+            return default
+        return long(self.value[0])
+    
+    def i(self, default=0):
+        if self.value is None or len(self.value) == 0:
+            return default
+        return int(self.value[0])
+    
+    def f(self, default=0.0):
+        if self.value is None or len(self.value) == 0:
+            return default
+        return float(self.value[0])
+
+    def date(self, pattern='%Y-%m-%d', default=None):
+        if self.value is None or len(self.value) == 0:
+            return default
+        return datetime.strptime(self.value[0], pattern)
+
+    def s(self, default=None, sep=None):
+        if self.value is None or len(self.value) == 0:
+            return default
+        if len(self.value) > 1:
+            if sep:
+                return sep.join(self.value)
+            else:
+                return self.value
+        return self.value[0]
+    
+    def sl(self, sep=',', mapf=None):
+        if self.value is None or len(self.value) == 0:
+            return []
+        vs = self.value[0].split(sep)
+        if mapf:
+            return map(mapf, vs)
+        else:
+            return vs
 
 
 class Controller(tornado.web.RequestHandler):
@@ -235,13 +282,16 @@ class Controller(tornado.web.RequestHandler):
             if self.request.method not in ("GET", "HEAD", "OPTIONS") and \
                     self.application.settings.get("xsrf_cookies"):
                 self.check_xsrf_cookie()
-            self.prepare()
-            if not self._finished:
-                self._execute_method(*self.path_args, **self.path_kwargs)
-                if self._auto_finish and not self._finished:
-                    self.finish()
+            self._execute0()
         except Exception as e:
             self._handle_request_exception(e)
+    
+    def _execute0(self):
+        self.prepare()
+        if not self._finished:
+            self._execute_method(*self.path_args, **self.path_kwargs)
+            if self._auto_finish and not self._finished:
+                self.finish()
 
     def _execute_method(self, *args, **kwargs):
         """
@@ -307,22 +357,13 @@ class Controller(tornado.web.RequestHandler):
         paragraphs = ['<p>%s</p>' % p.strip().replace(
             '\n', '<br />') for p in paragraphs]
         return ''.join(paragraphs)
-
-    def get_path_intvalue(self, key, default=None):
-        val = self.path_kwargs.get(key, default)
-        if not isinstance(val, int) and len(val) == 0:
-            return default
-        return int(val)
-
-    def get_path_value(self, key, default=None):
-        val = self.path_kwargs.get(key, default)
-        return val
-
-    def get_long_arg(self, key, default=None):
-        val = self.get_argument(key, None)
-        if val is None or len(val) == 0:
-            return default
-        return long(val)
+    
+    def get_argv(self, key):
+        if key in self.path_kwargs:
+            val = self.path_kwargs.get(key, None)
+        else:
+            val = self.get_arguments(key, None)
+        return ArgsValue(key, val)
 
     def send_file(self, file_path):
         url = urllib.pathname2url(file_path)

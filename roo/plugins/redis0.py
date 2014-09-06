@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 # -*- coding: utf-8 -*-
 import roo.log
 logger = roo.log.logger(__name__)
@@ -48,8 +51,11 @@ class RedisBaseModel(EntityModel):
     @classmethod
     def init(clz, application):
         EntityModel.init(application)
-        setattr(clz, 'redis', application.redis)
-
+        if hasattr(application, 'redis'):
+            setattr(clz, 'redis', application.redis)
+        else:
+            print 'No redis install.'
+            
     @classmethod
     def incr(clz, *args):
         """

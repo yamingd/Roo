@@ -1,4 +1,6 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 import re
 import os
 from datetime import datetime
@@ -30,7 +32,7 @@ logger = roo.log.logger(__name__)
 from roo import enum
 from roo.router import route
 from roo.plugin import manager as pm
-from roo.model import EntityModel
+from roo.model import ModelMixin
 from roo.lib.dictfy import ODict
 from roo.controller import Controller, UrlDebug
 
@@ -85,7 +87,10 @@ class RooApplication(tornado.web.Application):
         self._load_plugins()
         self._load_handlers()
         self._load_models()
-        self._load_uimodules()
+        try:
+            self._load_uimodules()
+        except Exception:
+            pass
 
     def _load_handlers(self):
         """
@@ -121,7 +126,7 @@ class RooApplication(tornado.web.Application):
             try:
                 if isinstance(thing, enum):
                     self.models[name] = thing
-                elif issubclass(thing, EntityModel):
+                elif issubclass(thing, ModelMixin):
                     thing.init(self)
                     self.models[name] = thing
             except TypeError:
@@ -161,7 +166,7 @@ class RooApplication(tornado.web.Application):
         """
         load tornado ui modules
         """
-        logger.info('loading ui modeuls')
+        logger.info('loading ui modeuls from app.views.modules')
         self.ui_modules_map = {}
         _ui_modules = __import__(
             'app.views.modules', globals(), locals(), ['ui_modules'], -1)

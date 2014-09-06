@@ -1,11 +1,15 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 import roo.log
 logger = roo.log.logger(__name__)
 
 from datetime import datetime
+from pprint import pformat
+from UserDict import DictMixin
+from cStringIO import StringIO
 
-from roo.lib import ODict, jsonfy
-from roo.collections import RowSet, RankSet
+from roo.lib import jsonfy
 from roo import encoding
 
 
@@ -29,10 +33,186 @@ class NoneResult(object):
     pass
 
 
-class EntityModel(ODict):
+class Field(dict):
+ 
+    """
+    Container of field metadata
+    """
+    def __init__(self, default=None):
+        self.default = default
+
+    def parse(self, value):
+        return value
+
+
+class IntField(Field):
+    pass
+
+
+class LongField(Field):
+    pass
+
+
+class BooleanField(Field):
+    pass
+
+
+class FloatField(Field):
+    pass
+
+
+class DateField(Field):
+    pass
+
+
+class DateTimeField(Field):
+    pass
+
+
+class TimestampField(Field):
+    pass
+
+
+class TextField(Field):
+    pass
+
+
+class StringField(Field):
+    pass
+
+
+class IPField(Field):
+    pass
+
+
+def ip_int(x):
+    if isinstance(x, str) or isinstance(x, unicode):
+        iv = sum([256**j*int(i) for j,i in enumerate(x.split('.')[::-1])])
+        return iv
+    else:
+        s = '.'.join([str(x/(256**i)%256) for i in range(3,-1,-1)])
+        return s
+
+
+class Sqlb(object):
+    def __init__(self):
+        self.f = StringIO()
+    
+    def append(self, s):
+        self.f.write(s)
+        return self
+
+    @property
+    def s(self):
+        return self.f.getvalue()
+    
+    def __del__(self):
+        self.f.close()
+        self.f = None
+
+
+class ModelMeta(type):
+ 
+    def __new__(mcs, class_name, bases, attrs):
+        #print mcs
+        #print class_name
+        #print bases
+        #print attrs
+        fields = {}
+        new_attrs = {}
+        for n, v in attrs.iteritems():
+            if isinstance(v, Field):
+                fields[n] = v
+            else:
+                new_attrs[n] = v
+ 
+        cls = type.__new__(mcs, class_name, bases, new_attrs)
+        cls.__fields__ = cls.__fields__.copy()
+        for b in bases:
+            if hasattr(b, '__fields__'):
+                fields.update(b.__fields__)
+        cls.__fields__.update(fields)
+        cls._sql_fields_ = ','.join(fields.keys())
+        cls._sql_cols_ = cls._sql_fields_.split(',')
+        
+        #logger.info(bases)
+        #logger.info(class_name)
+        #logger.info(cls._sql_fields_)
+        #logger.info(cls._sql_cols_)
+
+        return cls
+
+
+class DictItem(DictMixin, object):
+ 
+    __fields__ = {}
+ 
+    def __init__(self, *args, **kwargs):
+        self._values = {}
+        if args or kwargs:  # avoid creating dict for most common case
+            for k, v in dict(*args, **kwargs).iteritems():
+                self[k] = v
+ 
+    def __getitem__(self, key):
+        return self._values[key]
+ 
+    def __setitem__(self, key, value):
+        if key in self.__fields__:
+            self._values[key] = self.__fields__[key].parse(value)
+        else:
+            self._values[key] = value
+            logger.warn("%s does not support field: %s" % (self.__class__.__name__, key))
+ 
+    def __delitem__(self, key):
+        del self._values[key]
+ 
+    def __getattr__(self, name):
+        if name not in self._values:
+            raise AttributeError(name)
+        return self._values[name]
+ 
+    def __setattr__(self, name, value):
+        if name.startswith('_'):
+            super(DictItem, self).__setattr__(name, value)
+            return
+        if name in self.__fields__:
+            self._values[name] = self.__fields__[name].parse(value)
+        else:
+            self._values[name] = value
+            logger.warn("%s does not support field: %s" % (self.__class__.__name__, name))
+
+    def keys(self):
+        return self._values.keys()
+ 
+    def __repr__(self):
+        return pformat(dict(self))
+ 
+    def copy(self):
+        return self.__class__(self)
+    
+    def as_json(self):
+        return jsonfy.dumps(self._values)
+
+    @classmethod
+    def from_json(clz, json_str):
+        m = jsonfy.loads(json_str)
+        if isinstance(m, dict):
+            return clz(**m)
+        return m
+
+
+class ModelDef(DictItem):
+ 
+    """
+    model definition of columns, fields
+    """
+    __metaclass__ = ModelMeta
+
+
+class ModelMixin(object):
 
     """
-    EntityModel Base class. by defining common functions
+    model handle methods. such as db, cache
     """
 
     @classmethod
@@ -41,7 +221,7 @@ class EntityModel(ODict):
         setattr(clz, 'models', application.models)
 
     @classmethod
-    def find(clz, id, time=86400, update=False):
+    def find(clz, id, time=86400, update=False, callback=None):
         pass
 
     @classmethod
@@ -67,16 +247,20 @@ class EntityModel(ODict):
     @property
     def cacheid(self):
         return getattr(self, '__res_name__') + ':' + getattr(self, 'id')
-
-    def as_json(self):
-        return jsonfy.dumps(self)
-
+    
     @classmethod
-    def from_json(clz, json_str):
-        m = jsonfy.loads(json_str)
-        if isinstance(m, dict):
-            return clz(**m)
-        return m
+    def map(clz, fields, values):
+        if values is None:
+            return None
+        if len(values) == 0:
+            return []
+        rs = []
+        for rec in values:
+            args = {}
+            for f, v in zip(fields, rec):
+                args[f] = v
+            rs.append(clz(**args))
+        return rs
 
 
 def gen_cache_key(clzz_name, args, prefix=''):
@@ -101,107 +285,3 @@ def gen_cache_key(clzz_name, args, prefix=''):
         key = key + ':' + ':'.join([_conv(x) for x in args if x])
     return key
 
-
-def prstat(model_clzz_name):
-    """
-    @prstat('UserStat')
-    def stat(self): pass
-    """
-    def fwrapper(func):
-        def wrapper(*args, **kwargs):
-            _self = args[0]
-            if not hasattr(_self, '_stat'):
-                _clzz = _self.__class__
-                #print _self, _clzz
-                _clzz = getattr(_clzz.models, model_clzz_name)
-                _self._stat = _clzz.find(getattr(_self, 'id'))
-            return _self._stat
-        return wrapper
-    return fwrapper
-
-
-def prref(model_clzz_name, prop_name, idtype=long):
-    """
-    @prref('User', 'user_id'):
-    def user(self): pass
-    """
-    def fwrapper(func):
-        def wrapper(*args, **kwargs):
-            _self = args[0]
-            _name = '_o_' + prop_name
-            _clzz = _self.__class__
-            _clzz = getattr(_clzz.models, model_clzz_name)
-            val = getattr(_self, prop_name)
-            if val is None:
-                logger.error('prref: value is None. p=' + prop_name)
-                return None
-            if idtype:
-                val = idtype(val)
-            if not val or val <= 0:
-                return _clzz()
-            _ob = None
-            if hasattr(_self, _name):
-                _ob = getattr(_self, _name)
-                if isinstance(_ob, dict):
-                    _ob = _clzz(**_ob)
-                if _ob.id != val:
-                    _ob = None
-            if _ob is None:
-                _ob = _clzz.find(val)
-                setattr(_self, _name, _ob)
-            return _ob
-        return wrapper
-    return fwrapper
-
-
-def lrange(model_clazz_name, lrange_key):
-    """
-    @lrange('UserAttachment', 'user:attachs:%s')
-    def attachments(self, index=1, size=10): pass
-    """
-    def fwrapper(func):
-        def wrapper(*args, **kwargs):
-            _self = args[0]
-            pi = kwargs.get('index', 1)
-            ps = kwargs.get('size', 10)
-            _name = '_lr_' + model_clazz_name.lower()
-            if not hasattr(_self, _name):
-                _clzz = _self.__class__
-                _clzz = getattr(_clzz.models, model_clazz_name)
-                r = _clzz.app.redis
-                key = lrange_key % _self.id
-                start = (pi - 1) * ps
-                items = r.lrange(key, start, start + ps - 1)
-                total = r.llen(key)
-                result = RowSet(items, _clzz, total=total, limit=ps, start=pi)
-                setattr(_self, _name, result)
-            return getattr(_self, _name)
-        return wrapper
-    return fwrapper
-
-
-def zrange(model_clazz_name, field_name, zrange_key):
-    """
-    @zrange('UserAttachment', 'field', 'user:attachs:%s')
-    def attachments(self, index=1, size=10): pass
-    """
-    def fwrapper(func):
-        def wrapper(*args, **kwargs):
-            _self = args[0]
-            pi = kwargs.get('index', 1)
-            ps = kwargs.get('size', 10)
-            _name = '_zr_' + field_name
-            if not hasattr(_self, _name):
-                _clzz = _self.__class__
-                _clzz = getattr(_clzz.models, model_clazz_name)
-                r = _clzz.app.redis
-                start = (pi - 1) * ps
-                key = zrange_key % _self.id
-                items = r.zrange(
-                    key, start, start + ps - 1, desc=False, withscores=True)
-                result = RankSet(
-                    items, _clzz, field_name, limit=ps, start=pi)
-                setattr(_self, _name, result)
-            return getattr(_self, _name)
-        return wrapper
-    return fwrapper
